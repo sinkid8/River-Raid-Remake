@@ -14,8 +14,14 @@ public class ShipCollision : MonoBehaviour
             Destroy(gameObject);  // Destroy the ship
         }
 
-        // Check if the ship collides with a wall (asteroid belt)
+       
         if (collision.gameObject.CompareTag("Wall"))
+        {
+            TriggerExplosion();
+            Destroy(gameObject);  // Destroy the ship
+        }
+
+        if (collision.gameObject.CompareTag("Planet"))
         {
             TriggerExplosion();
             Destroy(gameObject);  // Destroy the ship

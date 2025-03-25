@@ -20,7 +20,7 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Enemy") || collision.CompareTag("Obstacle"))
+        if (collision.CompareTag("Enemy") || collision.CompareTag("Debris"))
         {
             HealthComponent health = collision.GetComponent<HealthComponent>();
             if (health != null)
@@ -30,22 +30,9 @@ public class ProjectileController : MonoBehaviour
 
             if (collision.CompareTag("Enemy") && GameManager.Instance != null)
             {
-                GameManager.Instance.AddScore(10); 
+                GameManager.Instance.AddScore(10);
             }
 
-            Destroy(gameObject);
-        }
-
-        // Check if the projectile hits debris
-        if (collision.CompareTag("Debris"))
-        {
-            // Trigger explosion at the debris' position
-            TriggerExplosion(collision.transform.position);
-
-            // Destroy the debris
-            Destroy(collision.gameObject);
-
-            // Destroy the projectile
             Destroy(gameObject);
         }
 
@@ -55,11 +42,5 @@ public class ProjectileController : MonoBehaviour
             // Ignore collision with battery
             Physics2D.IgnoreCollision(collision, GetComponent<Collider2D>());
         }
-    }
-
-    private void TriggerExplosion(Vector2 position)
-    {
-        // Instantiate explosion at the debris' position
-        Instantiate(explosionPrefab, position, Quaternion.identity);
     }
 }

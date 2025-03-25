@@ -21,17 +21,9 @@ public class InputManager : MonoBehaviour
         {
             input += Vector2.left;
         }
-        if (Input.GetKey(KeyCode.S))
-        {
-            input += Vector2.down;
-        }
         if (Input.GetKey(KeyCode.D))
         {
             input += Vector2.right;
-        }
-        if (Input.GetKey(KeyCode.W))
-        {
-            input += Vector2.up;
         }
 
         // Normalize if diagonal movement

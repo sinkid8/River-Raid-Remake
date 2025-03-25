@@ -6,8 +6,8 @@ public class ShipController : MonoBehaviour
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float rotationSpeed = 10f;
     [SerializeField] private float movementDampening = 0.9f;
+    [SerializeField] private float verticalDriftAmount = 0.5f;
 
     // Weapon parameters
     [SerializeField] private GameObject laserPrefab;
@@ -25,17 +25,14 @@ public class ShipController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
 
-        // If no firePoint is assigned, use the ship's transform
         if (firePoint == null)
         {
             firePoint = transform;
         }
 
-        // Initialize handlers
-        movementHandler = new ShipMovementHandler(rb, moveSpeed, rotationSpeed);
+        movementHandler = new ShipMovementHandler(rb, moveSpeed, 0f, verticalDriftAmount);
         weaponHandler = new WeaponHandler(laserPrefab, missilePrefab, firePoint, laserFireRate, missileFireRate);
 
-        // Setup input event listeners
         inputManager.OnMove.AddListener(HandleMoveInput);
         inputManager.OnFireLaser.AddListener(HandleFireLaser);
         inputManager.OnFireMissile.AddListener(HandleFireMissile);
@@ -59,7 +56,6 @@ public class ShipController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Handle movement in FixedUpdate for physics consistency
         movementHandler.Move();
         movementHandler.ApplyDampening(movementDampening);
     }

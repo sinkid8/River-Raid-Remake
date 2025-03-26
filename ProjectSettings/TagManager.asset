@@ -8,6 +8,9 @@ TagManager:
   - Debris
   - FuelCan
   - Battery
+  - Enemy
+  - Planet
+  - Wall
   layers:
   - Default
   - TransparentFX

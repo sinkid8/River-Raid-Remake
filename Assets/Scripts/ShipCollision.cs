@@ -13,6 +13,19 @@ public class ShipCollision : MonoBehaviour
             TriggerExplosion();
             Destroy(gameObject);  // Destroy the ship
         }
+
+       
+        if (collision.gameObject.CompareTag("Wall"))
+        {
+            TriggerExplosion();
+            Destroy(gameObject);  // Destroy the ship
+        }
+
+        if (collision.gameObject.CompareTag("Planet"))
+        {
+            TriggerExplosion();
+            Destroy(gameObject);  // Destroy the ship
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

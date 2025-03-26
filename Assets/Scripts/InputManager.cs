@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     // Weapon firing events
     public UnityEvent OnFireLaser = new UnityEvent();
     public UnityEvent OnFireMissile = new UnityEvent();
+    public UnityEvent OnFireEnergyWeapon = new UnityEvent(); // New energy weapon event
 
     // Utility events
     public UnityEvent OnResetPressed = new UnityEvent();
@@ -44,6 +45,12 @@ public class InputManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftControl))
         {
             OnFireMissile?.Invoke();
+        }
+
+        // Energy weapon firing with E key
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            OnFireEnergyWeapon?.Invoke();
         }
 
         // Handle reset/restart

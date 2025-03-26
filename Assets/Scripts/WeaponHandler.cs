@@ -3,22 +3,22 @@ using UnityEngine;
 public class WeaponHandler
 {
     private GameObject laserPrefab;
-    private GameObject missilePrefab;
+    private GameObject energyWeaponPrefab; // New energy weapon prefab
     private Transform firePoint;
     private float laserFireRate;
-    private float missileFireRate;
+    private float energyWeaponFireRate; // Energy weapon fire rate
 
     private float lastLaserFireTime = 0f;
-    private float lastMissileFireTime = 0f;
+    private float lastEnergyWeaponFireTime = 0f;
 
-    public WeaponHandler(GameObject laserPrefab, GameObject missilePrefab, Transform firePoint,
-                          float laserFireRate, float missileFireRate)
+    public WeaponHandler(GameObject laserPrefab, GameObject energyWeaponPrefab,
+                          Transform firePoint, float laserFireRate, float energyWeaponFireRate)
     {
         this.laserPrefab = laserPrefab;
-        this.missilePrefab = missilePrefab;
+        this.energyWeaponPrefab = energyWeaponPrefab;
         this.firePoint = firePoint;
         this.laserFireRate = laserFireRate;
-        this.missileFireRate = missileFireRate;
+        this.energyWeaponFireRate = energyWeaponFireRate;
     }
 
     public bool FireLaser()
@@ -39,19 +39,19 @@ public class WeaponHandler
         return false;
     }
 
-    public bool FireMissile()
+    public bool FireEnergyWeapon()
     {
-        if (Time.time > lastMissileFireTime + missileFireRate)
+        if (Time.time > lastEnergyWeaponFireTime + energyWeaponFireRate)
         {
-            if (missilePrefab != null && firePoint != null)
+            if (energyWeaponPrefab != null && firePoint != null)
             {
-                Object.Instantiate(missilePrefab, firePoint.position, firePoint.rotation);
-                lastMissileFireTime = Time.time;
+                Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);
+                lastEnergyWeaponFireTime = Time.time;
                 return true;
             }
             else
             {
-                Debug.LogWarning("Missile Prefab or FirePoint not assigned to WeaponHandler");
+                Debug.LogWarning("Energy Weapon Prefab or FirePoint not assigned to WeaponHandler");
             }
         }
         return false;

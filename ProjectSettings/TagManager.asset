@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - Planet
   - Wall
+  - EnergyProjectile
   layers:
   - Default
   - TransparentFX

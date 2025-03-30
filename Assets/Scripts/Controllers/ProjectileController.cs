@@ -5,7 +5,7 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private int damage = 10;
     [SerializeField] private float lifeTime = 3f;
-    // [SerializeField] private bool isLaser = true; // True for laser, false for missile
+    [SerializeField] private bool isLaser = true; // True for laser, false for missile
     [SerializeField] private GameObject explosionPrefab;  // Explosion prefab
 
     private void Start()

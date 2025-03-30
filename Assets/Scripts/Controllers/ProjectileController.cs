@@ -11,6 +11,10 @@ public class ProjectileController : MonoBehaviour
     private void Start()
     {
         Destroy(gameObject, lifeTime);
+        if (AudioManager.instance != null && isLaser)
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.laserClip);
+        }
     }
 
     private void Update()

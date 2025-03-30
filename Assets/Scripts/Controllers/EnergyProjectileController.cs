@@ -19,6 +19,10 @@ public class EnergyProjectileController : MonoBehaviour
     {
         Destroy(gameObject, lifeTime);
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.energyProjectileClip);
+        }
         // Apply scaling
         transform.localScale *= scale;
 

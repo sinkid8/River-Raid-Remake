@@ -13,6 +13,8 @@ public class EnergyProjectileController : MonoBehaviour
     [SerializeField] private TrailRenderer trailRenderer;
     [SerializeField] private ParticleSystem particles;
 
+    private bool hasCollided = false;
+
     private void Start()
     {
         Destroy(gameObject, lifeTime);
@@ -45,6 +47,25 @@ public class EnergyProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (hasCollided)
+            return; // Ignore further collisions if the projectile already hit
+
+        if (collision.CompareTag("Planet"))
+        {
+            hasCollided = true; // Mark that the projectile has hit the planet
+
+            // Apply the collision effects
+            PlanetController planet = collision.GetComponent<PlanetController>();
+            if (planet != null)
+            {
+                // Send a trigger event to the planet to handle the shake and explosion
+                planet.SendMessage("OnTriggerEnter2D", GetComponent<Collider2D>());
+            }
+
+            // Destroy the projectile after the collision
+            Destroy(gameObject);
+        }
+
         if (collision.CompareTag("Enemy") || collision.CompareTag("Debris"))
         {
             // Apply damage to health component

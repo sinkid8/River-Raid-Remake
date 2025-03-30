@@ -48,10 +48,9 @@ public class FuelManager : MonoBehaviour
     // Method to use half of the fuel (for energy weapon)
     public bool UseHalfFuel()
     {
-        if (currentFuelLevel >= maxFuelLevel)
+        if (currentFuelLevel >= 2) // Ensure there are at least 2 fuel bars (50%)
         {
-            // Halve the fuel level (integer division)
-            currentFuelLevel = maxFuelLevel / 2;
+            currentFuelLevel -= 2; // Use 2 units of fuel (50%)
             UpdateBatteryUI();
             OnFuelLevelChanged.Invoke(currentFuelLevel);
             return true;

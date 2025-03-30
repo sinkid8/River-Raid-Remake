@@ -7,6 +7,10 @@ public class ShipCollision : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.explosionClip);
+        }
         // Check if the ship collides with debris
         if (collision.gameObject.CompareTag("Debris"))
         {
@@ -33,6 +37,10 @@ public class ShipCollision : MonoBehaviour
         // Check if the ship collides with a battery
         if (collision.CompareTag("Battery"))
         {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlaySound(AudioManager.instance.powerupClip);
+            }
             // Add fuel when collecting battery
             if (fuelManager != null)
             {

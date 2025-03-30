@@ -7,6 +7,7 @@ public class ShipMovementHandler
     private float rotationSpeed;
     private Vector2 inputDirection;
     private float verticalDrift;
+    private bool gameStarted;
 
     public ShipMovementHandler(Rigidbody2D rb, float moveSpeed, float rotationSpeed, float verticalDrift = 0.5f)
     {
@@ -14,6 +15,7 @@ public class ShipMovementHandler
         this.moveSpeed = moveSpeed;
         this.rotationSpeed = rotationSpeed;
         this.verticalDrift = verticalDrift;
+        this.gameStarted = false; // Initially the game hasn't started
     }
 
     public void UpdateInput(Vector2 newInputDirection)
@@ -21,11 +23,23 @@ public class ShipMovementHandler
         inputDirection = newInputDirection;
     }
 
+    public void StartGame()
+    {
+        gameStarted = true; // Start the game
+    }
+
     public void Move()
     {
-        Vector2 movement = inputDirection * moveSpeed;
-        movement.y += verticalDrift;
-        rb.linearVelocity = movement;
+        if (gameStarted)
+        {
+            Vector2 movement = inputDirection * moveSpeed;
+            movement.y += verticalDrift;
+            rb.linearVelocity = movement; // Set the velocity to move the ship
+        }
+        else
+        {
+            rb.linearVelocity = Vector2.zero; // Ensure the ship is stationary when the game hasn't started
+        }
     }
 
     public void ApplyDampening(float dampeningValue)

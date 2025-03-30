@@ -11,14 +11,17 @@ public class WeaponHandler
     private float lastLaserFireTime = 0f;
     private float lastEnergyWeaponFireTime = 0f;
 
+    private FuelManager fuelManager;
+
     public WeaponHandler(GameObject laserPrefab, GameObject energyWeaponPrefab,
-                          Transform firePoint, float laserFireRate, float energyWeaponFireRate)
+                          Transform firePoint, float laserFireRate, float energyWeaponFireRate, FuelManager fuelManager)
     {
         this.laserPrefab = laserPrefab;
         this.energyWeaponPrefab = energyWeaponPrefab;
         this.firePoint = firePoint;
         this.laserFireRate = laserFireRate;
         this.energyWeaponFireRate = energyWeaponFireRate;
+        this.fuelManager = fuelManager;
     }
 
     public bool FireLaser()
@@ -41,13 +44,31 @@ public class WeaponHandler
 
     public bool FireEnergyWeapon()
     {
+        // Ensure enough fuel for the energy weapon (at least 2 bars)
         if (Time.time > lastEnergyWeaponFireTime + energyWeaponFireRate)
         {
             if (energyWeaponPrefab != null && firePoint != null)
             {
-                Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);
-                lastEnergyWeaponFireTime = Time.time;
-                return true;
+                // Check if fuel is sufficient (at least 2 bars)
+                if (fuelManager.GetCurrentFuelLevel() >= 2) // Only fire if fuel is at least 50%
+                {
+                    // Fire the energy weapon
+                    Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);
+
+                    // Use half the fuel (2 bars)
+                    if (!fuelManager.UseHalfFuel())
+                    {
+                        Debug.Log("Not enough fuel to fire energy weapon.");
+                        return false; // Don't fire if fuel is insufficient
+                    }
+
+                    lastEnergyWeaponFireTime = Time.time;
+                    return true;
+                }
+                else
+                {
+                    Debug.Log("Not enough fuel to fire energy weapon.");
+                }
             }
             else
             {

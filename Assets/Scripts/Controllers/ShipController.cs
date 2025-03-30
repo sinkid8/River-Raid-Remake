@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI;
 
 public class ShipController : MonoBehaviour
@@ -16,29 +17,36 @@ public class ShipController : MonoBehaviour
     [SerializeField] private GameObject energyWeaponPrefab;
     [SerializeField] private Transform firePoint;
     [SerializeField] private float laserFireRate = 0.25f;
-    [SerializeField] private float energyWeaponFireRate = 2f; 
+    [SerializeField] private float energyWeaponFireRate = 2f;
 
     // Energy weapon UI feedback
     [SerializeField] private Image energyReadyIndicator;
+    [SerializeField] private TextMeshProUGUI startMessage; // TextMeshPro for the start message
 
     private Rigidbody2D rb;
     private ShipMovementHandler movementHandler;
     private WeaponHandler weaponHandler;
     private Vector2 currentInputDirection;
     private bool energyWeaponReady = false;
+    private bool gameStarted = false; // Track whether the game has started
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        // Make sure the ship starts stationary
+        rb.linearVelocity = Vector2.zero;  // Set initial velocity to zero
 
         if (firePoint == null)
         {
             firePoint = transform;
         }
 
-        movementHandler = new ShipMovementHandler(rb, moveSpeed, 0f, verticalDriftAmount);
+        // Initialize the WeaponHandler with the FuelManager reference
         weaponHandler = new WeaponHandler(laserPrefab, energyWeaponPrefab,
-                                          firePoint, laserFireRate, energyWeaponFireRate);
+                                          firePoint, laserFireRate, energyWeaponFireRate, fuelManager);
+
+        movementHandler = new ShipMovementHandler(rb, moveSpeed, 0f, verticalDriftAmount);
 
         // Register input handlers
         inputManager.OnMove.AddListener(HandleMoveInput);
@@ -60,44 +68,58 @@ public class ShipController : MonoBehaviour
 
         // Initialize UI state if present
         UpdateEnergyWeaponUI();
+
+        // Show the start message
+        if (startMessage != null)
+        {
+            startMessage.gameObject.SetActive(true); // Make sure the message is visible initially
+        }
     }
 
     private void HandleMoveInput(Vector2 input)
     {
+        if (!gameStarted)
+            return; // Do not handle movement if the game hasn't started
+
         currentInputDirection = input;
         movementHandler.UpdateInput(input);
     }
 
     private void HandleFireLaser()
     {
+        if (!gameStarted)
+            return; // Don't fire if the game hasn't started
+
         weaponHandler.FireLaser();
     }
 
     private void HandleFireEnergyWeapon()
     {
-        if (energyWeaponReady && fuelManager != null)
+        if (!gameStarted)
+            return; // Don't fire if the game hasn't started
+
+        if (fuelManager.GetCurrentFuelLevel() >= 2) // Check if fuel is at least 50% (2 bars)
         {
             if (weaponHandler.FireEnergyWeapon())
             {
-                // Use half of the fuel
-                fuelManager.UseHalfFuel();
-
-                // Energy weapon is no longer ready until fuel is full again
-                energyWeaponReady = false;
-
-                // Update the UI
-                UpdateEnergyWeaponUI();
+                // Use 50% of the fuel (2 bars)
+                if (fuelManager.UseHalfFuel())
+                {
+                    // Energy weapon is no longer ready until fuel is at least 2 bars
+                    energyWeaponReady = false;
+                    UpdateEnergyWeaponUI();
+                }
             }
         }
         else
         {
-            // Optional: Audio or visual feedback that energy weapon isn't ready
-            Debug.Log("Energy Weapon not ready - need full fuel!");
+            Debug.Log("Not enough fuel to fire energy weapon. Need at least 2 bars.");
         }
     }
 
     private void OnEnergyWeaponReady()
     {
+        // Energy weapon is ready when fuel is full (4 bars)
         energyWeaponReady = true;
         UpdateEnergyWeaponUI();
 
@@ -120,5 +142,20 @@ public class ShipController : MonoBehaviour
     {
         movementHandler.Move();
         movementHandler.ApplyDampening(movementDampening);
+    }
+
+    // Called when any key is pressed to start the game
+    private void Update()
+    {
+        if (!gameStarted && Input.anyKeyDown)
+        {
+            gameStarted = true;
+            if (startMessage != null)
+            {
+                startMessage.gameObject.SetActive(false); // Hide the start message
+            }
+
+            movementHandler.StartGame(); // Inform the movement handler that the game has started
+        }
     }
 }

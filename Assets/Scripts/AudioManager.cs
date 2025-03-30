@@ -14,9 +14,10 @@ public class AudioManager : MonoBehaviour
     [Header("Audio Clips")]
 
     public AudioClip laserClip;
-    public AudioClip missileClip;
+    public AudioClip energyProjectileClip;
     public AudioClip ambientClip;
     public AudioClip explosionClip;
+    public AudioClip bigExplosionClip;
     public AudioClip powerupClip;
     private void Awake()
     {

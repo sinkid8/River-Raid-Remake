@@ -7,7 +7,11 @@ public class ShipCollision : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (AudioManager.instance != null)
+        if (AudioManager.instance != null && collision.gameObject.CompareTag("Planet"))
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.bigExplosionClip);
+        }
+        else if (AudioManager.instance != null)
         {
             AudioManager.instance.PlaySound(AudioManager.instance.explosionClip);
         }

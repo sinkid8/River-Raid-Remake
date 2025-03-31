@@ -104,9 +104,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   damage: 10
-  lifeTime: 1
+  lifeTime: 1.5
   isLaser: 1
-  scoreValue: 0
+  scoreValue: 10
 --- !u!50 &2473200811427708881
 Rigidbody2D:
   serializedVersion: 5

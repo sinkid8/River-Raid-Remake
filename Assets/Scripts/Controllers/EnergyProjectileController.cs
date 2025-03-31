@@ -5,9 +5,11 @@ public class EnergyProjectileController : MonoBehaviour
     [SerializeField] private float speed = 12f;
     [SerializeField] private int damage = 30; // Higher damage than regular projectiles
     [SerializeField] private float lifeTime = 4f;
-    [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private float scale = 1.5f; // Larger projectile
     [SerializeField] private Color projectileColor = Color.cyan; // Distinctive color
+    [SerializeField] private int scoreValue = 25; // Higher score value for energy weapon kills
+
+    // Removed explosion prefab from here to prevent double explosions
 
     // Optional visual effects
     [SerializeField] private TrailRenderer trailRenderer;
@@ -75,21 +77,21 @@ public class EnergyProjectileController : MonoBehaviour
                 health.TakeDamage(damage);
             }
 
-            // Add score if it's an enemy
-            if (collision.CompareTag("Enemy") && GameManager.Instance != null)
+            // Try to award score through enemy controller
+            EnemyController enemy = collision.GetComponent<EnemyController>();
+            if (enemy != null)
             {
-                GameManager.Instance.AddScore(25); // More points for energy weapon
+                // Let the enemy handle destruction, scoring and explosion
+                enemy.DestroyEnemy();
+            }
+            else if (collision.CompareTag("Enemy") && ScoreManager.Instance != null)
+            {
+                // Direct score addition if no EnemyController exists
+                ScoreManager.Instance.AddScore(scoreValue);
             }
 
-            // Create explosion
-            if (explosionPrefab != null)
-            {
-                GameObject explosion = Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-
-                // Scale up the explosion
-                explosion.transform.localScale *= 1.5f;
-            }
-
+            // No explosion here - let the enemy handle it
+            
             // Destroy the projectile
             Destroy(gameObject);
         }

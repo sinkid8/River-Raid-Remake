@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private InputManager inputManager;
+    [SerializeField] private LivesManager livesManager; // Reference to LivesManager
 
     private int score = 0;
 
@@ -27,6 +28,17 @@ public class GameManager : MonoBehaviour
 
         // Initialize score display
         UpdateScoreUI();
+        
+        // Ensure we have a LivesManager
+        if (livesManager == null)
+        {
+            livesManager = FindFirstObjectByType<LivesManager>();
+            if (livesManager == null)
+            {
+                GameObject livesObj = new GameObject("LivesManager");
+                livesManager = livesObj.AddComponent<LivesManager>();
+            }
+        }
     }
 
     public void AddScore(int points)
@@ -41,10 +53,11 @@ public class GameManager : MonoBehaviour
         score = 0;
         UpdateScoreUI();
 
-        // Other reset operations can be added here
-
-        // Example: Respawn player if needed
-        // if (playerShip != null) playerShip.Respawn();
+        // Tell the LivesManager to reset the level
+        if (livesManager != null)
+        {
+            livesManager.ResetLevel();
+        }
     }
 
     private void UpdateScoreUI()

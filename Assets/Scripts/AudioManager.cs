@@ -8,8 +8,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource sfxSource;
     public AudioSource ambientSource;
-    public AudioSource powerupSource;
-    public AudioSource explosionSource;
+    public AudioSource levelupSource;
 
     [Header("Audio Clips")]
 
@@ -19,6 +18,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip explosionClip;
     public AudioClip bigExplosionClip;
     public AudioClip powerupClip;
+    public AudioClip levelupClip;
     private void Awake()
     {
         if (instance == null)
@@ -39,6 +39,15 @@ public class AudioManager : MonoBehaviour
             sfxSource.PlayOneShot(clip);
         }
     }
+
+    public void PlayLevelupSound(AudioClip clip)
+    {
+        if (clip != null)
+        {
+            levelupSource.PlayOneShot(clip);
+        }
+    }
+
     void Start()
     {
         PlayGameSound();

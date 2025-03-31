@@ -49,4 +49,10 @@ public class ShipMovementHandler
             rb.linearVelocity *= dampeningValue;
         }
     }
+
+    public void IncreaseVerticalDrift(float amount)
+    {
+        verticalDrift += amount;
+        Debug.Log("Vertical drift increased by " + amount + ". New vertical drift: " + verticalDrift);
+    }
 }

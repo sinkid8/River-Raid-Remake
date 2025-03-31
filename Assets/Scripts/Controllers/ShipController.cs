@@ -6,7 +6,9 @@ public class ShipController : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private FuelManager fuelManager;
-    [SerializeField] private TextMeshProUGUI levelText;
+    [SerializeField] private TextMeshProUGUI level1Text;
+    [SerializeField] private TextMeshProUGUI level2Text;
+    [SerializeField] private TextMeshProUGUI level3Text;
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
@@ -154,6 +156,8 @@ public class ShipController : MonoBehaviour
             if (startMessage != null)
             {
                 startMessage.gameObject.SetActive(false); // Hide the start message
+                level1Text.gameObject.SetActive(true); // Show the level 1 text
+                Destroy(level1Text.gameObject, 2f); // Destroy it after 2 seconds
             }
 
             movementHandler.StartGame(); // Inform the movement handler that the game has started
@@ -161,12 +165,22 @@ public class ShipController : MonoBehaviour
         Vector3 currentPosition = transform.position;
         if (currentPosition.y > 45)
         {
-            Debug.Log("y position is 45, activating level text.");
+            Debug.Log("y position is 45, welcome to level 2.");
             // Activate the text when the player reaches Y = 45
-            if (levelText != null)
+            if (level2Text != null)
             {
-                levelText.gameObject.SetActive(true); // Set the text object active
-                Destroy(levelText.gameObject, 2f); // Destroy it after 2 seconds
+                level2Text.gameObject.SetActive(true); // Set the text object active
+                Destroy(level2Text.gameObject, 2f); // Destroy it after 2 seconds
+            }
+        }
+        if (currentPosition.y > 104)
+        {
+            Debug.Log("y position is 104, welcome to level 3.");
+            // Activate the text when the player reaches Y = 45
+            if (level3Text != null)
+            {
+                level3Text.gameObject.SetActive(true); // Set the text object active
+                Destroy(level3Text.gameObject, 2f); // Destroy it after 2 seconds
             }
         }
     }

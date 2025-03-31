@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class ShipCollision : MonoBehaviour
 {
+    private Rigidbody2D rb1;
+    private ShipMovementHandler movementHandler;
     public GameObject explosionPrefab;
     public FuelManager fuelManager; // Reference to FuelManager
 

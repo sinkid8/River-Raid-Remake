@@ -32,8 +32,10 @@ public class ShipController : MonoBehaviour
     private Vector2 currentInputDirection;
     private bool energyWeaponReady = false;
     private bool gameStarted = false; // Track whether the game has started
-    private bool level2SoundPlayed = false; // Flag to track if the sound has been played
-    private bool level3SoundPlayed = false; // Flag to track if the sound has been played
+    private bool level2SoundPlayed = false; // Flag to track if the level 2 sound has been played
+    private bool level3SoundPlayed = false; // Flag to track if the level 3 sound has been played
+    private bool driftIncreasedAtLevel2 = false;
+    private bool driftIncreasedAtLevel3 = false;
 
     private void Start()
     {
@@ -164,36 +166,56 @@ public class ShipController : MonoBehaviour
 
             movementHandler.StartGame(); // Inform the movement handler that the game has started
         }
+
+        // Track ship position
         Vector3 currentPosition = transform.position;
-        if (currentPosition.y > 45)
+
+        // Trigger level 2 at y = 45
+        if (currentPosition.y > 45 && !level2SoundPlayed)
         {
             Debug.Log("y position is 45, welcome to level 2.");
-            // Activate the text when the player reaches Y = 45
+            level2SoundPlayed = true;
             if (level2Text != null)
             {
-                if (AudioManager.instance != null && !level2SoundPlayed)
-                {
-                    level2SoundPlayed = true; // Set the flag to true after playing the sound
-                    AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
-                }
-                level2Text.gameObject.SetActive(true); // Set the text object active
-                Destroy(level2Text.gameObject, 2f); // Destroy it after 2 seconds
+                level2Text.gameObject.SetActive(true);
+                Destroy(level2Text.gameObject, 2f);
+            }
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
             }
         }
-        if (currentPosition.y > 104)
+
+        // Increase vertical drift when crossing y = 45
+        if (currentPosition.y > 45 && !driftIncreasedAtLevel2)
         {
-            Debug.Log("y position is 104, welcome to level 3.");
-            // Activate the text when the player reaches Y = 45
+            movementHandler.IncreaseVerticalDrift(1f);
+            driftIncreasedAtLevel2 = true;
+        }
+
+        // Trigger level 3 at y = 105
+        if (currentPosition.y > 105 && !level3SoundPlayed)
+        {
+            Debug.Log("y position is 105, welcome to level 3.");
+            level3SoundPlayed = true;
             if (level3Text != null)
             {
-                if (AudioManager.instance != null && !level3SoundPlayed)
-                {
-                    level3SoundPlayed = true; // Set the flag to true after playing the sound
-                    AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
-                }
-                level3Text.gameObject.SetActive(true); // Set the text object active
-                Destroy(level3Text.gameObject, 2f); // Destroy it after 2 seconds
+                level3Text.gameObject.SetActive(true);
+                Destroy(level3Text.gameObject, 2f);
             }
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
+            }
+        }
+
+        // Increase vertical drift when crossing y = 105
+        if (currentPosition.y > 105 && !driftIncreasedAtLevel3)
+        {
+            movementHandler.IncreaseVerticalDrift(1f);
+            driftIncreasedAtLevel3 = true;
         }
     }
 }

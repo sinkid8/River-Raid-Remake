@@ -17,6 +17,12 @@ public class EnemyController : MonoBehaviour
             // Add score handler if not present
             scoreHandler = gameObject.AddComponent<EnemyScoreHandler>();
         }
+        
+        // Set the score handler's score value to match this enemy's score value
+        if (scoreHandler != null)
+        {
+            scoreHandler.SetScoreValue(scoreValue);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,7 +32,8 @@ public class EnemyController : MonoBehaviour
             return;
             
         // Check if hit by a projectile
-        if (collision.GetComponent<ProjectileController>() != null)
+        if (collision.GetComponent<ProjectileController>() != null || 
+            collision.GetComponent<EnergyProjectileController>() != null)
         {
             // Destroy self
             DestroyEnemy();

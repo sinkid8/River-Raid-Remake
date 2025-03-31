@@ -103,11 +103,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 12
-  damage: 30
-  lifeTime: 4
-  explosionPrefab: {fileID: 100002, guid: cafecd3fc3b761c45bb1553f35cf5c96, type: 3}
+  damage: 1000
+  lifeTime: 3
   scale: 1.5
   projectileColor: {r: 0, g: 1, b: 1, a: 1}
+  scoreValue: 25
   trailRenderer: {fileID: 0}
   particles: {fileID: 0}
 --- !u!50 &8445240141499060128

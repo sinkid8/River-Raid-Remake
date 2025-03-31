@@ -1573,6 +1573,8 @@ GameObject:
   - component: {fileID: 875130092}
   - component: {fileID: 875130094}
   - component: {fileID: 875130095}
+  - component: {fileID: 875130096}
+  - component: {fileID: 875130097}
   m_Layer: 0
   m_Name: Planet 1
   m_TagString: Planet
@@ -1700,6 +1702,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shakeIntensity: 0.1
   shakeDuration: 0.5
+--- !u!114 &875130096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875130091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d745bb4b4c5368409bf92d98f7601da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  explosionPrefab: {fileID: 0}
+  scoreValue: 1000
+--- !u!114 &875130097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 875130091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06a167272dff11e4ca83d376404ad6ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2000
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &920291260
 GameObject:
   m_ObjectHideFlags: 0

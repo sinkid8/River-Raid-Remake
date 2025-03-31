@@ -117,7 +117,7 @@ public class ScoreManager : MonoBehaviour
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.pivot = new Vector2(1, 1);
             rectTransform.anchoredPosition = new Vector2(-10, -10); // 10 pixels from top right
-            rectTransform.sizeDelta = new Vector2(200, 50);
+            rectTransform.sizeDelta = new Vector2(300, 50);
             
             // Configure text
             scoreText.alignment = TextAlignmentOptions.Right;

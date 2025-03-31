@@ -198,16 +198,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputManager: {fileID: 3129243715625788557, guid: 1ddf02bebd7d33d4db3e7a4507ff1a53, type: 3}
   fuelManager: {fileID: 596119486111311080, guid: 59392cdbfe2d72d49b13eb9fcd57a3c5, type: 3}
-  startMessage: {fileID: 9124834129799070029, guid: d027f9f32c16ff64198103ada6524d39, type: 3}
-  level1Text: {fileID: 3478866418069612262, guid: 3e36b01504c052b4f90f74aa2f9b7075, type: 3}
-  level2Text: {fileID: 1584240008488701012, guid: fccbaa46060538b4d89e3ac8d60fda96, type: 3}
-  level3Text: {fileID: 3284186586077856931, guid: 6e944be35351e004bbd359c573655ee4, type: 3}
   moveSpeed: 10
   movementDampening: 0.9
   verticalDriftAmount: 3
   laserPrefab: {fileID: 8035577819808165935, guid: f32e5def39c1da642817c593bfc2bd43, type: 3}
   energyWeaponPrefab: {fileID: 8743066070364526398, guid: 202437563b1fd9a46b2f5209d6f959cd, type: 3}
   firePoint: {fileID: 0}
-  laserFireRate: 0.25
+  laserFireRate: 0.4
   energyWeaponFireRate: 2
   energyReadyIndicator: {fileID: 0}

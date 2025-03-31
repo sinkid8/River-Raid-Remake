@@ -16,6 +16,12 @@ public class ShipMovementHandler
         this.rotationSpeed = rotationSpeed;
         this.verticalDrift = verticalDrift;
         this.gameStarted = false; // Initially the game hasn't started
+        
+        // Force the rigidbody to be stationary at creation
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     public void UpdateInput(Vector2 newInputDirection)
@@ -38,13 +44,14 @@ public class ShipMovementHandler
         }
         else
         {
-            rb.linearVelocity = Vector2.zero; // Ensure the ship is stationary when the game hasn't started
+            // When game is not started, ensure ship is completely stationary
+            rb.linearVelocity = Vector2.zero;
         }
     }
 
     public void ApplyDampening(float dampeningValue)
     {
-        if (inputDirection.magnitude < 0.1f)
+        if (gameStarted && inputDirection.magnitude < 0.1f)
         {
             rb.linearVelocity *= dampeningValue;
         }

@@ -23,6 +23,12 @@ public class WeaponHandler
         this.energyWeaponFireRate = energyWeaponFireRate;
         this.fuelManager = fuelManager;
     }
+    
+    // Method to update the FuelManager reference
+    public void UpdateFuelManager(FuelManager newFuelManager)
+    {
+        this.fuelManager = newFuelManager;
+    }
 
     public bool FireLaser()
     {
@@ -50,7 +56,7 @@ public class WeaponHandler
             if (energyWeaponPrefab != null && firePoint != null)
             {
                 // Check if fuel is sufficient (at least 2 bars)
-                if (fuelManager.GetCurrentFuelLevel() >= 2) // Only fire if fuel is at least 50%
+                if (fuelManager != null && fuelManager.GetCurrentFuelLevel() >= 2) // Only fire if fuel is at least 50%
                 {
                     // Fire the energy weapon
                     Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);

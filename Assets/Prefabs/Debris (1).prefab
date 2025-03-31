@@ -104,7 +104,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   explosionPrefab: {fileID: 100002, guid: cafecd3fc3b761c45bb1553f35cf5c96, type: 3}
-  scoreValue: 1
+  scoreValue: 10
 --- !u!114 &2032065807519120570
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2599,14 +2599,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 1110112620}
   ambientSource: {fileID: 1110112623}
-  powerupSource: {fileID: 1110112624}
-  explosionSource: {fileID: 1110112625}
+  levelupSource: {fileID: 1110112624}
   laserClip: {fileID: 8300000, guid: c8c88d8b85bbe514d86797d80e400722, type: 3}
   energyProjectileClip: {fileID: 8300000, guid: 1766bace9edb77e40a0669073b580f3e, type: 3}
   ambientClip: {fileID: 8300000, guid: 9e9f23d0738e77043a9ab5846ade5b9a, type: 3}
   explosionClip: {fileID: 8300000, guid: b2e7b7d2d39e6d0428ded188eb55bec0, type: 3}
   bigExplosionClip: {fileID: 8300000, guid: 136cbed6ab5ac2349ab89607a7b3b5e9, type: 3}
   powerupClip: {fileID: 8300000, guid: 9b4a2a15825846549af7db08308c9fc1, type: 3}
+  levelupClip: {fileID: 8300000, guid: 4ccc74ed6f3e5434f8b3cc3b1aded130, type: 3}
 --- !u!4 &1110112622
 Transform:
   m_ObjectHideFlags: 0

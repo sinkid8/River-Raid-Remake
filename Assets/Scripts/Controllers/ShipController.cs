@@ -32,6 +32,8 @@ public class ShipController : MonoBehaviour
     private Vector2 currentInputDirection;
     private bool energyWeaponReady = false;
     private bool gameStarted = false; // Track whether the game has started
+    private bool level2SoundPlayed = false; // Flag to track if the sound has been played
+    private bool level3SoundPlayed = false; // Flag to track if the sound has been played
 
     private void Start()
     {
@@ -169,6 +171,11 @@ public class ShipController : MonoBehaviour
             // Activate the text when the player reaches Y = 45
             if (level2Text != null)
             {
+                if (AudioManager.instance != null && !level2SoundPlayed)
+                {
+                    level2SoundPlayed = true; // Set the flag to true after playing the sound
+                    AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
+                }
                 level2Text.gameObject.SetActive(true); // Set the text object active
                 Destroy(level2Text.gameObject, 2f); // Destroy it after 2 seconds
             }
@@ -179,6 +186,11 @@ public class ShipController : MonoBehaviour
             // Activate the text when the player reaches Y = 45
             if (level3Text != null)
             {
+                if (AudioManager.instance != null && !level3SoundPlayed)
+                {
+                    level3SoundPlayed = true; // Set the flag to true after playing the sound
+                    AudioManager.instance.PlayLevelupSound(AudioManager.instance.levelupClip);
+                }
                 level3Text.gameObject.SetActive(true); // Set the text object active
                 Destroy(level3Text.gameObject, 2f); // Destroy it after 2 seconds
             }

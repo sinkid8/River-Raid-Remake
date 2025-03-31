@@ -6,6 +6,7 @@ public class ShipController : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private FuelManager fuelManager;
+    [SerializeField] private TextMeshProUGUI levelText;
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
@@ -156,6 +157,17 @@ public class ShipController : MonoBehaviour
             }
 
             movementHandler.StartGame(); // Inform the movement handler that the game has started
+        }
+        Vector3 currentPosition = transform.position;
+        if (currentPosition.y > 45)
+        {
+            Debug.Log("y position is 45, activating level text.");
+            // Activate the text when the player reaches Y = 45
+            if (levelText != null)
+            {
+                levelText.gameObject.SetActive(true); // Set the text object active
+                Destroy(levelText.gameObject, 2f); // Destroy it after 2 seconds
+            }
         }
     }
 }

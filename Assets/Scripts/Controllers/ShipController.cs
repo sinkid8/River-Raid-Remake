@@ -231,7 +231,6 @@ public class ShipController : MonoBehaviour
             shipStopped = true;
             gameOverText.gameObject.SetActive(true);
             gameEndText.gameObject.SetActive(true);
-            SceneManager.LoadScene("Main Menu"); 
         }
 
         if (Input.anyKeyDown && shipStopped)

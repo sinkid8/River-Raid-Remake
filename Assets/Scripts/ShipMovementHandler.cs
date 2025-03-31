@@ -55,9 +55,4 @@ public class ShipMovementHandler
         verticalDrift += amount;
         Debug.Log("Vertical drift increased by " + amount + ". New vertical drift: " + verticalDrift);
     }
-
-    public void StopMovement()
-    {
-        gameStarted = false; // Stop the game
-    }
 }

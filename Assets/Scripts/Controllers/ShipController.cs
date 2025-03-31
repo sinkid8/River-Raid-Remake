@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class ShipController : MonoBehaviour
 {
@@ -353,7 +351,7 @@ public class ShipController : MonoBehaviour
     // Called when any key is pressed to start the game
     private void Update()
     {
-        if (!gameStarted && Input.anyKeyDown && shipStopped == false)
+        if (!gameStarted && Input.anyKeyDown)
         {
             gameStarted = true;
             
@@ -391,7 +389,7 @@ public class ShipController : MonoBehaviour
             if (level2Text != null)
             {
                 level2Text.gameObject.SetActive(true);
-                StartCoroutine(DeactivateTextAfterDelay(level2Text.gameObject, 2f));
+                Destroy(level2Text.gameObject, 2f);
             }
 
             if (AudioManager.instance != null)
@@ -415,7 +413,7 @@ public class ShipController : MonoBehaviour
             if (level3Text != null)
             {
                 level3Text.gameObject.SetActive(true);
-                StartCoroutine(DeactivateTextAfterDelay(level3Text.gameObject, 2f));
+                Destroy(level3Text.gameObject, 2f);
             }
 
             if (AudioManager.instance != null)

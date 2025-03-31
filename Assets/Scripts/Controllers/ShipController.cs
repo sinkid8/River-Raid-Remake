@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class ShipController : MonoBehaviour
 {
@@ -11,8 +9,6 @@ public class ShipController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI level1Text;
     [SerializeField] private TextMeshProUGUI level2Text;
     [SerializeField] private TextMeshProUGUI level3Text;
-    [SerializeField] private TextMeshProUGUI gameOverText;
-    [SerializeField] private TextMeshProUGUI gameEndText;
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
@@ -40,7 +36,6 @@ public class ShipController : MonoBehaviour
     private bool level3SoundPlayed = false; // Flag to track if the level 3 sound has been played
     private bool driftIncreasedAtLevel2 = false;
     private bool driftIncreasedAtLevel3 = false;
-    private bool shipStopped = false; // Flag to track if the ship has stopped
 
     private void Start()
     {
@@ -159,14 +154,14 @@ public class ShipController : MonoBehaviour
     // Called when any key is pressed to start the game
     private void Update()
     {
-        if (!gameStarted && Input.anyKeyDown && shipStopped == false)
+        if (!gameStarted && Input.anyKeyDown)
         {
             gameStarted = true;
             if (startMessage != null)
             {
                 startMessage.gameObject.SetActive(false); // Hide the start message
                 level1Text.gameObject.SetActive(true); // Show the level 1 text
-                StartCoroutine(DeactivateTextAfterDelay(level1Text.gameObject, 2f));
+                Destroy(level1Text.gameObject, 2f); // Destroy it after 2 seconds
             }
 
             movementHandler.StartGame(); // Inform the movement handler that the game has started
@@ -183,7 +178,7 @@ public class ShipController : MonoBehaviour
             if (level2Text != null)
             {
                 level2Text.gameObject.SetActive(true);
-                StartCoroutine(DeactivateTextAfterDelay(level2Text.gameObject, 2f));
+                Destroy(level2Text.gameObject, 2f);
             }
 
             if (AudioManager.instance != null)
@@ -207,7 +202,7 @@ public class ShipController : MonoBehaviour
             if (level3Text != null)
             {
                 level3Text.gameObject.SetActive(true);
-                StartCoroutine(DeactivateTextAfterDelay(level3Text.gameObject, 2f));
+                Destroy(level3Text.gameObject, 2f);
             }
 
             if (AudioManager.instance != null)
@@ -222,29 +217,5 @@ public class ShipController : MonoBehaviour
             movementHandler.IncreaseVerticalDrift(1f);
             driftIncreasedAtLevel3 = true;
         }
-
-        if (currentPosition.y > 145 && !shipStopped)
-        {
-            // Reset the game or perform any other action when the ship goes off-screen
-            Debug.Log("Ship went off-screen. Resetting the game.");
-            movementHandler.StopMovement(); // Stop the ship's movement
-            shipStopped = true;
-            gameOverText.gameObject.SetActive(true);
-            gameEndText.gameObject.SetActive(true);
-            SceneManager.LoadScene("Main Menu"); 
-        }
-
-        if (Input.anyKeyDown && shipStopped)
-        {
-            gameOverText.gameObject.SetActive(false);
-            gameEndText.gameObject.SetActive(false);
-            SceneManager.LoadScene("Main Menu"); // Reload the current scene
-        }
-    }
-
-    private IEnumerator DeactivateTextAfterDelay(GameObject textObject, float delay)
-    {
-        yield return new WaitForSeconds(delay);  // Wait for the specified delay
-        textObject.SetActive(false); // Deactivate the text object after the delay
     }
 }

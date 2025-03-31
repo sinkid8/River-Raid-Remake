@@ -5,11 +5,13 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
 
     [Header("Audio Sources")]
+
     public AudioSource sfxSource;
     public AudioSource ambientSource;
     public AudioSource levelupSource;
 
     [Header("Audio Clips")]
+
     public AudioClip laserClip;
     public AudioClip energyProjectileClip;
     public AudioClip ambientClip;

@@ -104,9 +104,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   damage: 10
-  lifeTime: 1.5
+  lifeTime: 3
   isLaser: 1
-  scoreValue: 10
+  explosionPrefab: {fileID: 100002, guid: cafecd3fc3b761c45bb1553f35cf5c96, type: 3}
 --- !u!50 &2473200811427708881
 Rigidbody2D:
   serializedVersion: 5

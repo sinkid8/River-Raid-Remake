@@ -6,9 +6,7 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private int damage = 10;
     [SerializeField] private float lifeTime = 3f;
     [SerializeField] private bool isLaser = true; // True for laser, false for missile
-    [SerializeField] private int scoreValue = 10; // Default score value for destroyed enemies
-
-    // Removed explosion prefab from here to prevent double explosions
+    [SerializeField] private GameObject explosionPrefab;  // Explosion prefab
 
     private void Start()
     {
@@ -28,28 +26,17 @@ public class ProjectileController : MonoBehaviour
     {
         if (collision.CompareTag("Enemy") || collision.CompareTag("Debris"))
         {
-            // Apply damage to health component
             HealthComponent health = collision.GetComponent<HealthComponent>();
             if (health != null)
             {
                 health.TakeDamage(damage);
             }
-            
-            // Try to trigger score directly on the enemy
-            EnemyController enemy = collision.GetComponent<EnemyController>();
-            if (enemy != null)
+
+            if (collision.CompareTag("Enemy") && GameManager.Instance != null)
             {
-                // Let the enemy handle destruction, scoring and explosion
-                enemy.DestroyEnemy();
-            }
-            else if (collision.CompareTag("Enemy") && ScoreManager.Instance != null)
-            {
-                // Direct score addition if no EnemyController exists
-                ScoreManager.Instance.AddScore(scoreValue);
+                GameManager.Instance.AddScore(10);
             }
 
-            // Destroy the projectile without creating an explosion
-            // The explosion will be created by the EnemyController instead
             Destroy(gameObject);
         }
 

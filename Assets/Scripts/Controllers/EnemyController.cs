@@ -4,39 +4,14 @@ public class EnemyController : MonoBehaviour
 {
     [SerializeField] private GameObject explosionPrefab;
     [SerializeField] private int scoreValue = 10;
-    
-    private EnemyScoreHandler scoreHandler;
-    private bool isDestroyed = false;
-    
-    private void Start()
-    {
-        // Initialize score handler
-        scoreHandler = GetComponent<EnemyScoreHandler>();
-        if (scoreHandler == null)
-        {
-            // Add score handler if not present
-            scoreHandler = gameObject.AddComponent<EnemyScoreHandler>();
-        }
-        
-        // Set the score handler's score value to match this enemy's score value
-        if (scoreHandler != null)
-        {
-            scoreHandler.SetScoreValue(scoreValue);
-        }
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Avoid multiple collisions
-        if (isDestroyed)
-            return;
-            
-        // Check if hit by a projectile
-        if (collision.GetComponent<ProjectileController>() != null || 
-            collision.GetComponent<EnergyProjectileController>() != null)
+        // Check if hit by a projectile (the projectile script will handle damaging us)
+        if (collision.GetComponent<ProjectileController>() != null)
         {
-            // Destroy self
-            DestroyEnemy();
+            // Nothing needed here since the ProjectileController handles the damage
+            Debug.Log("Enemy hit by projectile");
         }
 
         // Check if hit by the player
@@ -55,36 +30,19 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    // This can be called from the HealthComponent's OnDeath event or directly
+    // This can be called from the HealthComponent's OnDeath event
     public void DestroyEnemy()
     {
-        // Avoid multiple calls
-        if (isDestroyed)
-            return;
-            
-        isDestroyed = true;
-            
         // Award score
-        if (scoreHandler != null)
+        if (GameManager.Instance != null)
         {
-            scoreHandler.AwardScore();
-        }
-        else if (ScoreManager.Instance != null)
-        {
-            // Fallback to direct score manager if score handler isn't available
-            ScoreManager.Instance.AddScore(scoreValue);
+            GameManager.Instance.AddScore(scoreValue);
         }
 
         // Spawn explosion effect
         if (explosionPrefab != null)
         {
             Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        }
-
-        // Play explosion sound
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.PlaySound(AudioManager.instance.explosionClip);
         }
 
         // Destroy the enemy

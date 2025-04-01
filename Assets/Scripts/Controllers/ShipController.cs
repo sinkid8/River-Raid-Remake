@@ -14,8 +14,8 @@ public class ShipController : MonoBehaviour
     private TextMeshProUGUI level1Text;
     private TextMeshProUGUI level2Text;
     private TextMeshProUGUI level3Text;
-    [SerializeField] private TextMeshProUGUI gameOverText;
-    [SerializeField] private TextMeshProUGUI gameEndText;
+    private TextMeshProUGUI gameOverText;
+    private TextMeshProUGUI gameEndText;
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
@@ -92,6 +92,8 @@ public class ShipController : MonoBehaviour
         Debug.Log($"Level1 found: {level1Text != null}");
         Debug.Log($"Level2 found: {level2Text != null}");
         Debug.Log($"Level3 found: {level3Text != null}");
+        Debug.Log($"GameOverText found: {gameOverText != null}");
+        Debug.Log($"GameEndText found: {gameEndText != null}");
         
         rb = GetComponent<Rigidbody2D>();
 
@@ -174,6 +176,8 @@ public class ShipController : MonoBehaviour
             level1Text = FindTextInTransform(canvas.transform, "Level 1");
             level2Text = FindTextInTransform(canvas.transform, "Level 2");
             level3Text = FindTextInTransform(canvas.transform, "Level 3");
+            gameOverText = FindTextInTransform(canvas.transform, "GameOverText");
+            gameEndText = FindTextInTransform(canvas.transform, "GameEndText");
             
             // If we found all elements, we can stop searching
             if (beginningText != null && level1Text != null && 
@@ -184,7 +188,8 @@ public class ShipController : MonoBehaviour
         }
         
         // If we didn't find the elements by name, look for all TextMeshProUGUI components
-        if (beginningText == null || level1Text == null || level2Text == null || level3Text == null)
+        if (beginningText == null || level1Text == null || level2Text == null || level3Text == null ||
+            gameOverText == null || gameEndText == null)
         {
             TextMeshProUGUI[] allTexts = FindObjectsOfType<TextMeshProUGUI>();
             
@@ -214,6 +219,18 @@ public class ShipController : MonoBehaviour
                 {
                     level3Text = text;
                     Debug.Log($"Found Level 3 by content: {text.name}");
+                }
+                else if (gameOverText == null && 
+                         (text.name.Contains("Game Over") || text.text.Contains("Game Over")))
+                {
+                    gameOverText = text;
+                    Debug.Log($"Found GameOverText by content: {text.name}");
+                }
+                else if (gameEndText == null && 
+                         (text.name.Contains("Game End") || text.text.Contains("Game End")))
+                {
+                    gameEndText = text;
+                    Debug.Log($"Found GameEndText by content: {text.name}");
                 }
             }
         }
@@ -281,6 +298,14 @@ public class ShipController : MonoBehaviour
         if (level3Text != null)
         {
             level3Text.gameObject.SetActive(false);
+        }
+        if (gameOverText != null)
+        {
+            gameOverText.gameObject.SetActive(false);
+        }
+        if (gameEndText != null)
+        {
+            gameEndText.gameObject.SetActive(false);
         }
     }
 

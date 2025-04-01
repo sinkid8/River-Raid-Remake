@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class ProjectileController : MonoBehaviour
 {
@@ -13,15 +14,46 @@ public class ProjectileController : MonoBehaviour
 
     private void Start()
     {
+        // Set a timer to destroy this projectile after lifeTime seconds
         Destroy(gameObject, lifeTime);
+        
+        // Play sound effect if available
         if (AudioManager.instance != null && isLaser)
         {
             AudioManager.instance.PlaySound(AudioManager.instance.laserClip);
         }
+        
+        // Temporarily disable the collider to prevent immediate collision with the ship
+        Collider2D collider = GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            collider.enabled = false;
+            StartCoroutine(EnableColliderAfterDelay(0.1f, collider));
+        }
+        
+        // Ignore collisions with the player ship
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            Collider2D playerCollider = player.GetComponent<Collider2D>();
+            Collider2D projectileCollider = GetComponent<Collider2D>();
+            
+            if (playerCollider != null && projectileCollider != null)
+            {
+                Physics2D.IgnoreCollision(playerCollider, projectileCollider, true);
+            }
+        }
+    }
+
+    private IEnumerator EnableColliderAfterDelay(float delay, Collider2D collider)
+    {
+        yield return new WaitForSeconds(delay);
+        collider.enabled = true;
     }
 
     private void Update()
     {
+        // Move the projectile forward
         transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
@@ -36,42 +68,48 @@ public class ProjectileController : MonoBehaviour
             Debug.Log($"Projectile hit: {collision.gameObject.name}, tag: {collision.tag}");
         }
         
+        // Skip collisions with the player's ship
+        if (collision.CompareTag("Player"))
+        {
+            return;
+        }
+        
         // Mark as collided
         hasCollided = true;
         
-        // Handle planet hits differently
+        // Handle collision with battery - allow projectile to pass through
+        if (collision.CompareTag("Battery"))
+        {
+            // Reset the collision flag to allow further collisions
+            hasCollided = false;
+            return;
+        }
+        
+        // Handle planet hits
         if (collision.CompareTag("Planet"))
         {
-            // Regular projectiles do nothing to planets
-            if (isLaser)
-            {
-                // Just destroy the projectile
-                Destroy(gameObject);
-                return;
-            }
+            // Just destroy the projectile
+            Destroy(gameObject);
+            return;
         }
 
+        // Handle enemy and debris hits
         if (collision.CompareTag("Enemy") || collision.CompareTag("Debris"))
         {
-            // Try the new ImprovedEnemyController first
             EnemyController enemy = collision.GetComponent<EnemyController>();
             if (enemy != null)
             {
-                // Apply damage through the improved controller
+                // Apply damage
                 enemy.TakeDamage(damage);
             }
 
             // Destroy the projectile
             Destroy(gameObject);
+            return;
         }
-
-        // Special handling for batteries
-        if (collision.CompareTag("Battery"))
-        {
-            // Ignore collision with battery
-            Physics2D.IgnoreCollision(collision, GetComponent<Collider2D>());
-            hasCollided = false; // Reset to allow further collisions
-        }
+        
+        // For any other collision, destroy the projectile
+        Destroy(gameObject);
     }
     
     // Getter for damage value

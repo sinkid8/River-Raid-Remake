@@ -888,7 +888,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 9073573037041205142, guid: 53cec522f230f441282547b5742d7b25, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1956,7 +1957,6 @@ GameObject:
   - component: {fileID: 875130094}
   - component: {fileID: 875130095}
   - component: {fileID: 875130096}
-  - component: {fileID: 875130097}
   m_Layer: 0
   m_Name: Planet 1
   m_TagString: Planet
@@ -2096,22 +2096,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d745bb4b4c5368409bf92d98f7601da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 2000
+  showDebugMessages: 1
   explosionPrefab: {fileID: 0}
   scoreValue: 1000
---- !u!114 &875130097
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 875130091}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06a167272dff11e4ca83d376404ad6ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 2000
   OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
     m_PersistentCalls:
       m_Calls: []
 --- !u!1 &920291260
@@ -6121,6 +6113,10 @@ PrefabInstance:
     - target: {fileID: 1787847037622884109, guid: d80f3ce95fd324ad8b00b11a45a19dfc, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1787847037622884109, guid: d80f3ce95fd324ad8b00b11a45a19dfc, type: 3}
+      propertyPath: showDebugMessages
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6938207946294497085, guid: d80f3ce95fd324ad8b00b11a45a19dfc, type: 3}
       propertyPath: m_Enabled

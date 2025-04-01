@@ -24,7 +24,7 @@ public class ProjectileController : MonoBehaviour
         if (collider != null)
         {
             collider.enabled = false;
-            StartCoroutine(EnableColliderAfterDelay(0.1f, collider));
+            StartCoroutine(EnableColliderAfterDelay(0.3f, collider));
         }
         
         GameObject player = GameObject.FindGameObjectWithTag("Player");

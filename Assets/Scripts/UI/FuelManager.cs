@@ -12,9 +12,13 @@ public class FuelManager : MonoBehaviour
 
     private int currentFuelLevel = 0;
     private int maxFuelLevel = 4;
+    
+    // Default starting fuel level
+    [SerializeField] private int defaultStartingFuel = 0;
 
     private void Start()
     {
+        ResetFuel();
         UpdateBatteryUI();
     }
 
@@ -64,11 +68,28 @@ public class FuelManager : MonoBehaviour
 
     private void UpdateBatteryUI()
     {
-        batteryImage.sprite = batterySprites[currentFuelLevel];
+        if (batteryImage != null && batterySprites != null && currentFuelLevel >= 0 && currentFuelLevel < batterySprites.Length)
+        {
+            batteryImage.sprite = batterySprites[currentFuelLevel];
+        }
     }
 
     public int GetCurrentFuelLevel()
     {
         return currentFuelLevel;
+    }
+    
+    public void ResetFuel()
+    {
+        // Reset fuel to default starting value
+        currentFuelLevel = defaultStartingFuel;
+        UpdateBatteryUI();
+        OnFuelLevelChanged.Invoke(currentFuelLevel);
+        
+        // Check if we need to trigger the full fuel event
+        if (currentFuelLevel >= maxFuelLevel)
+        {
+            OnFuelFull.Invoke();
+        }
     }
 }

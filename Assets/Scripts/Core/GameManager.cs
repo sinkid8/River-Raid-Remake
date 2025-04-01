@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        inputManager.OnResetPressed.AddListener(ResetGame);
         UpdateScoreUI();
 
         if (livesManager == null)

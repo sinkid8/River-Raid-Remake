@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 977884895842905595}
   - component: {fileID: 5280419264790923195}
   - component: {fileID: 3628094153383176109}
-  - component: {fileID: 1092585695873382759}
   m_Layer: 0
   m_Name: Desert 3
   m_TagString: Debris
@@ -138,21 +137,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d745bb4b4c5368409bf92d98f7601da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 10
+  showDebugMessages: 1
   explosionPrefab: {fileID: 0}
   scoreValue: 10
---- !u!114 &1092585695873382759
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1719243332316720822}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 06a167272dff11e4ca83d376404ad6ce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 10
   OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
     m_PersistentCalls:
       m_Calls: []

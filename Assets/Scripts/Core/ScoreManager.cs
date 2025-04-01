@@ -107,10 +107,10 @@ public class ScoreManager : MonoBehaviour
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.pivot = new Vector2(1, 1);
             rectTransform.anchoredPosition = new Vector2(-10, -10);
-            rectTransform.sizeDelta = new Vector2(300, 50);
+            rectTransform.sizeDelta = new Vector2(200, 50);
 
             scoreText.alignment = TextAlignmentOptions.Right;
-            scoreText.fontSize = 44;
+            scoreText.fontSize = 24;
             
             Debug.Log("Created new score text object");
         }

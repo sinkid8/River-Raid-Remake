@@ -243,7 +243,7 @@ public class LivesManager : MonoBehaviour
             }
         }
 
-        Invoke("ReturnToMainMenu", 10.0f);
+        Invoke("ReturnToMainMenu", 4.0f);
     }
 
     private void ReturnToMainMenu()

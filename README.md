@@ -12,3 +12,7 @@ https://youtu.be/ov4faLLuzns
      - Player handling and shooting mechanics
      - Lives/scoring system
      - Enemy damage system and death mechanics
+- Kevin Ruan
+     - Game Audio Manager
+     - Level 3/Ending Game design
+     - Level UI

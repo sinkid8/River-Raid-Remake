@@ -139,7 +139,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 10
   showDebugMessages: 1
-  explosionPrefab: {fileID: 0}
+  explosionPrefab: {fileID: 100002, guid: cafecd3fc3b761c45bb1553f35cf5c96, type: 3}
   scoreValue: 10
   OnDeath:
     m_PersistentCalls:

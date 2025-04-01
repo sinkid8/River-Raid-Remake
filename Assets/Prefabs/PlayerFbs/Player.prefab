@@ -204,6 +204,6 @@ MonoBehaviour:
   laserPrefab: {fileID: 8035577819808165935, guid: f32e5def39c1da642817c593bfc2bd43, type: 3}
   energyWeaponPrefab: {fileID: 8743066070364526398, guid: 202437563b1fd9a46b2f5209d6f959cd, type: 3}
   firePoint: {fileID: 0}
-  laserFireRate: 0.4
-  energyWeaponFireRate: 1
+  laserFireRate: 0.3
+  energyWeaponFireRate: 0.7
   energyReadyIndicator: {fileID: 0}

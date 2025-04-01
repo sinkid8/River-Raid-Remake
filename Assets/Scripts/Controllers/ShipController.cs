@@ -28,8 +28,9 @@ public class ShipController : MonoBehaviour
     [SerializeField] private float laserFireRate = 0.25f;
     [SerializeField] private float energyWeaponFireRate = 1f;
 
-    // Energy weapon UI feedback
     [SerializeField] private Image energyReadyIndicator;
+    
+    [SerializeField] private float mainMenuCooldown = 2.0f;
 
     private Rigidbody2D rb;
     private ShipMovementHandler movementHandler;
@@ -41,7 +42,10 @@ public class ShipController : MonoBehaviour
     private bool level3SoundPlayed = false;
     private bool driftIncreasedAtLevel2 = false;
     private bool driftIncreasedAtLevel3 = false;
-    private bool shipStopped = false; 
+    private bool shipStopped = false;
+    private bool canReturnToMainMenu = false; 
+    
+    private ScoreManager scoreManager;
 
     public void SetInputManager(InputManager newInputManager)
     {
@@ -133,6 +137,13 @@ public class ShipController : MonoBehaviour
         else
         {
             Debug.LogError("FuelManager not found!");
+        }
+        
+        // Get reference to the ScoreManager
+        scoreManager = FindFirstObjectByType<ScoreManager>();
+        if (scoreManager == null)
+        {
+            Debug.LogWarning("ScoreManager not found! Score will not be displayed at game end.");
         }
 
         UpdateEnergyWeaponUI();
@@ -293,7 +304,7 @@ public class ShipController : MonoBehaviour
         weaponHandler.FireLaser();
     }
 
-private void HandleFireEnergyWeapon()
+    private void HandleFireEnergyWeapon()
     {
         if (!gameStarted)
             return;
@@ -405,16 +416,27 @@ private void HandleFireEnergyWeapon()
             movementHandler.IncreaseVerticalDrift(1f);
             driftIncreasedAtLevel3 = true;
         }
-        if (currentPosition.y > 145 && !shipStopped)
+        if (currentPosition.y > 165 && !shipStopped)
         {
             Debug.Log("Ship went off-screen. Resetting the game.");
             movementHandler.StopMovement();
             shipStopped = true;
+            
+            if (gameEndText != null && scoreManager != null)
+            {
+                int finalScore = scoreManager.GetScore();
+                gameEndText.text = $"Well done! You finished with {finalScore} points! Thanks for playing our demo. Press any key to return to the main menu";
+                Debug.Log($"Updating end text with score: {finalScore}");
+            }
+            
             gameOverText.gameObject.SetActive(true);
             gameEndText.gameObject.SetActive(true);
+            
+            canReturnToMainMenu = false;
+            StartCoroutine(EnableMainMenuReturn());
         }
 
-        if (Input.anyKeyDown && shipStopped)
+        if (Input.anyKeyDown && shipStopped && canReturnToMainMenu)
         {
             gameOverText.gameObject.SetActive(false);
             gameEndText.gameObject.SetActive(false);
@@ -427,5 +449,11 @@ private void HandleFireEnergyWeapon()
         yield return new WaitForSeconds(delay);
         textObject.SetActive(false);
     }
-
+    
+    private IEnumerator EnableMainMenuReturn()
+    {
+        yield return new WaitForSeconds(mainMenuCooldown);
+        Debug.Log("Main menu return enabled after cooldown");
+        canReturnToMainMenu = true;
+    }
 }

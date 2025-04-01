@@ -1,6 +1,7 @@
 # River Raid Remake
 We did our attempt at remaking the classic atari 2600 game River Raid.
-We decided to mainly focus on upgrading the visuals, but we also changed how the shooting mechanics worked
+Our twist was an additional weapon type that is required to break certain obstacles, creating another layer of challenge for the player where risky maneuvers have to be made to keep progressing through the levels.
+We had a heavy emphasis on visual appearance as well.
 Also changed the theme from river raiding to space raiding!
  
 # Video Demo:

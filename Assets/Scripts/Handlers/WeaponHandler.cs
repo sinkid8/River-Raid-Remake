@@ -35,10 +35,7 @@ public class WeaponHandler
         {
             if (laserPrefab != null && firePoint != null)
             {
-                // Spawn the projectile slightly in front of the fire point to avoid collision with the ship
-                Vector3 spawnPosition = firePoint.position + firePoint.up * 0.5f;
-                Object.Instantiate(laserPrefab, spawnPosition, firePoint.rotation);
-                
+                Object.Instantiate(laserPrefab, firePoint.position, firePoint.rotation);
                 lastLaserFireTime = Time.time;
                 return true;
             }
@@ -60,17 +57,12 @@ public class WeaponHandler
                 // Check if fuel is sufficient (at least 2 bars)
                 if (fuelManager != null && fuelManager.GetCurrentFuelLevel() >= 2) // Only fire if fuel is at least 50%
                 {
-                    // Spawn the energy projectile slightly in front of the fire point
-                    Vector3 spawnPosition = firePoint.position + firePoint.up * 0.5f;
-                    Object.Instantiate(energyWeaponPrefab, spawnPosition, firePoint.rotation);
+                    // Fire the energy weapon
+                    Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);
 
-                    // Use half the fuel (2 bars)
-                    if (!fuelManager.UseHalfFuel())
-                    {
-                        Debug.Log("Not enough fuel to fire energy weapon.");
-                        return false; // Don't fire if fuel is insufficient
-                    }
-
+                    // Use exactly 2 fuel bars, not half the tank
+                    fuelManager.UseExactFuel(2);
+                    
                     lastEnergyWeaponFireTime = Time.time;
                     return true;
                 }

@@ -321,27 +321,22 @@ public class ShipController : MonoBehaviour
     private void HandleFireLaser()
     {
         if (!gameStarted)
-            return; // Don't fire if the game hasn't started
+            return;
 
         weaponHandler.FireLaser();
     }
 
-    private void HandleFireEnergyWeapon()
+private void HandleFireEnergyWeapon()
     {
         if (!gameStarted)
-            return; // Don't fire if the game hasn't started
+            return;
 
-        if (fuelManager.GetCurrentFuelLevel() >= 2) // Check if fuel is at least 50% (2 bars)
+        if (fuelManager.GetCurrentFuelLevel() >= 2)
         {
             if (weaponHandler.FireEnergyWeapon())
             {
-                // Use 50% of the fuel (2 bars)
-                if (fuelManager.UseHalfFuel())
-                {
-                    // Energy weapon is no longer ready until fuel is at least 2 bars
-                    energyWeaponReady = false;
-                    UpdateEnergyWeaponUI();
-                }
+                energyWeaponReady = false;
+                UpdateEnergyWeaponUI();
             }
         }
         else
@@ -481,4 +476,5 @@ public class ShipController : MonoBehaviour
         yield return new WaitForSeconds(delay);  // Wait for the specified delay
         textObject.SetActive(false); // Deactivate the text object after the delay
     }
+
 }

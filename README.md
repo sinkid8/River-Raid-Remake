@@ -17,3 +17,7 @@ https://youtu.be/ov4faLLuzns
      - Game Audio Manager
      - Level 3/Ending Game design
      - Level UI
+ - Sina Hajeb
+     - Main Menu UI / Controls UI (Accessed through "!" in Main Menu)
+     - Level 1 / 2 design
+     - Debris / Planet Physics

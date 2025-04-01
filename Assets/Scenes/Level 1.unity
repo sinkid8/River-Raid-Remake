@@ -2155,6 +2155,7 @@ MonoBehaviour:
   showDebugMessages: 1
   shakeIntensity: 0.1
   shakeDuration: 0.5
+  upwardShiftAfterFirstShot: 0.2
 --- !u!1 &875130091
 GameObject:
   m_ObjectHideFlags: 0
@@ -2297,6 +2298,7 @@ MonoBehaviour:
   showDebugMessages: 1
   shakeIntensity: 0.1
   shakeDuration: 0.5
+  upwardShiftAfterFirstShot: 1
 --- !u!114 &875130096
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4833,6 +4835,7 @@ MonoBehaviour:
   showDebugMessages: 1
   shakeIntensity: 0.1
   shakeDuration: 0.5
+  upwardShiftAfterFirstShot: 0.2
 --- !u!4 &1734471226 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2429245481426999726, guid: 7f600a79b71c649048ea2e828871f912, type: 3}

@@ -7,17 +7,18 @@ public class FuelManager : MonoBehaviour
     public Image batteryImage;
     public Sprite[] batterySprites;
 
-    // Event for when fuel level changes
     public UnityEvent<int> OnFuelLevelChanged = new UnityEvent<int>();
-    // Event specifically for when fuel is full
     public UnityEvent OnFuelFull = new UnityEvent();
 
     private int currentFuelLevel = 0;
     private int maxFuelLevel = 4;
+    
+    // Default starting fuel level
+    [SerializeField] private int defaultStartingFuel = 0;
 
     private void Start()
     {
-        // Initialize battery UI
+        ResetFuel();
         UpdateBatteryUI();
     }
 
@@ -28,29 +29,36 @@ public class FuelManager : MonoBehaviour
             currentFuelLevel++;
             UpdateBatteryUI();
 
-            // Check if fuel is now full
             if (currentFuelLevel >= maxFuelLevel)
             {
                 OnFuelFull.Invoke();
             }
-
-            // Notify listeners about fuel level change
             OnFuelLevelChanged.Invoke(currentFuelLevel);
         }
     }
 
-    // Method to check if fuel is full
     public bool IsFuelFull()
     {
         return currentFuelLevel >= maxFuelLevel;
     }
 
-    // Method to use half of the fuel (for energy weapon)
     public bool UseHalfFuel()
     {
-        if (currentFuelLevel >= 2) // Ensure there are at least 2 fuel bars (50%)
+        if (currentFuelLevel >= 2)
         {
-            currentFuelLevel -= 2; // Use 2 units of fuel (50%)
+            currentFuelLevel -= 2;
+            UpdateBatteryUI();
+            OnFuelLevelChanged.Invoke(currentFuelLevel);
+            return true;
+        }
+        return false;
+    }
+
+    public bool UseExactFuel(int amount)
+    {
+        if (currentFuelLevel >= amount)
+        {
+            currentFuelLevel -= amount;
             UpdateBatteryUI();
             OnFuelLevelChanged.Invoke(currentFuelLevel);
             return true;
@@ -60,13 +68,28 @@ public class FuelManager : MonoBehaviour
 
     private void UpdateBatteryUI()
     {
-        // Update the battery image based on fuel level
-        batteryImage.sprite = batterySprites[currentFuelLevel];
+        if (batteryImage != null && batterySprites != null && currentFuelLevel >= 0 && currentFuelLevel < batterySprites.Length)
+        {
+            batteryImage.sprite = batterySprites[currentFuelLevel];
+        }
     }
 
-    // Added getter for current fuel level
     public int GetCurrentFuelLevel()
     {
         return currentFuelLevel;
+    }
+    
+    public void ResetFuel()
+    {
+        // Reset fuel to default starting value
+        currentFuelLevel = defaultStartingFuel;
+        UpdateBatteryUI();
+        OnFuelLevelChanged.Invoke(currentFuelLevel);
+        
+        // Check if we need to trigger the full fuel event
+        if (currentFuelLevel >= maxFuelLevel)
+        {
+            OnFuelFull.Invoke();
+        }
     }
 }

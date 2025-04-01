@@ -25,13 +25,11 @@ public class ScoreManager : MonoBehaviour
     
     private void Start()
     {
-        // Try to find the score text if not assigned
         if (scoreText == null)
         {
             FindScoreText();
         }
         
-        // Initialize the score display
         UpdateScoreDisplay();
     }
     
@@ -41,7 +39,6 @@ public class ScoreManager : MonoBehaviour
         
         foreach (Canvas canvas in allCanvases)
         {
-            // Try to find by direct children first
             Transform scoreTextTransform = canvas.transform.Find("ScoreText");
             
             if (scoreTextTransform != null)
@@ -54,7 +51,6 @@ public class ScoreManager : MonoBehaviour
                 }
             }
             
-            // If not found, search all children recursively
             scoreText = FindTextRecursive(canvas.transform, "ScoreText");
             
             if (scoreText != null)
@@ -64,7 +60,6 @@ public class ScoreManager : MonoBehaviour
             }
         }
         
-        // If we still haven't found it, create one
         CreateScoreText();
     }
     
@@ -83,7 +78,6 @@ public class ScoreManager : MonoBehaviour
                 }
             }
             
-            // Search child's children
             if (child.childCount > 0)
             {
                 TextMeshProUGUI text = FindTextRecursive(child, name);
@@ -99,27 +93,22 @@ public class ScoreManager : MonoBehaviour
     
     private void CreateScoreText()
     {
-        // Find a canvas to add the score text to
         Canvas canvas = FindObjectOfType<Canvas>();
         
         if (canvas != null)
         {
-            // Create a new GameObject for the score text
             GameObject scoreTextObject = new GameObject("ScoreText");
             scoreTextObject.transform.SetParent(canvas.transform, false);
             
-            // Add TextMeshProUGUI component
             scoreText = scoreTextObject.AddComponent<TextMeshProUGUI>();
             
-            // Set up RectTransform
             RectTransform rectTransform = scoreText.GetComponent<RectTransform>();
-            rectTransform.anchorMin = new Vector2(1, 1); // Top right
+            rectTransform.anchorMin = new Vector2(1, 1);
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.pivot = new Vector2(1, 1);
-            rectTransform.anchoredPosition = new Vector2(-10, -10); // 10 pixels from top right
+            rectTransform.anchoredPosition = new Vector2(-10, -10);
             rectTransform.sizeDelta = new Vector2(300, 50);
-            
-            // Configure text
+
             scoreText.alignment = TextAlignmentOptions.Right;
             scoreText.fontSize = 44;
             
@@ -131,14 +120,12 @@ public class ScoreManager : MonoBehaviour
         }
     }
     
-    // Add points to the score
     public void AddScore(int points)
     {
         currentScore += points;
         UpdateScoreDisplay();
     }
-    
-    // Update the UI display
+
     private void UpdateScoreDisplay()
     {
         if (scoreText != null)
@@ -146,14 +133,12 @@ public class ScoreManager : MonoBehaviour
             scoreText.text = $"Score: {currentScore}";
         }
     }
-    
-    // Get the current score
+
     public int GetScore()
     {
         return currentScore;
     }
-    
-    // Reset the score to zero
+
     public void ResetScore()
     {
         currentScore = 0;

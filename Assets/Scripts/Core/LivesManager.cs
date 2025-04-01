@@ -6,7 +6,7 @@ using Unity.Cinemachine;
 
 public class LivesManager : MonoBehaviour
 {
-    [SerializeField] public int maxLives = 3; // Changed to public for access from ShipController
+    [SerializeField] public int maxLives = 3;
     [SerializeField] private GameObject shipPrefab;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] public TextMeshProUGUI livesText;
@@ -14,63 +14,132 @@ public class LivesManager : MonoBehaviour
     [SerializeField] private float respawnDelay = 1.0f;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     
-    // References to necessary components
     [SerializeField] private InputManager inputManager;
     [SerializeField] private FuelManager fuelManager;
     
-    // Reference to the modern Cinemachine camera
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
-    public int currentLives; // Changed to public for access from ShipController
+    public int currentLives; 
     private GameObject currentShip;
-    private bool isProcessingDeath = false; // Flag to prevent multiple death calls
+    private bool isProcessingDeath = false;
+    private bool isFirstLoad = true;
+    private int livesToRestoreAfterReload = 0;
+    private bool isGameOver = false; 
 
-    // Singleton pattern
     public static LivesManager Instance;
 
     private void Awake()
     {
-        // Singleton setup
         if (Instance == null)
         {
             Instance = this;
+            DontDestroyOnLoad(gameObject);
+            currentLives = maxLives;
+            isGameOver = false;
         }
         else
         {
+            if (Instance.livesToRestoreAfterReload > 0)
+            {
+                Instance.currentLives = Instance.livesToRestoreAfterReload;
+                Instance.livesToRestoreAfterReload = 0;
+            }
+            isGameOver = Instance.isGameOver;
+            
             Destroy(gameObject);
             return;
         }
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == mainMenuSceneName)
+        {
+            isGameOver = false;
+            currentLives = maxLives;
+            return;
+        }
+
+        FindReferences();
         
-        // Find references if not set
+        UpdateLivesUI();
+        
+        if (isGameOver)
+        {
+            if (gameOverPanel != null)
+            {
+                gameOverPanel.SetActive(true);
+                Invoke("ReturnToMainMenu", 3.0f);
+            }
+            else
+            {
+                Debug.LogError("Game over panel not found!");
+            }
+            return;
+        }
+        else if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
+        
+        if (!isGameOver)
+        {
+            SpawnShip();
+        }
+        CleanupProjectiles();
+    }
+    
+    private void FindReferences()
+    {
         if (inputManager == null)
             inputManager = FindFirstObjectByType<InputManager>();
             
         if (fuelManager == null)
             fuelManager = FindFirstObjectByType<FuelManager>();
             
-        // Find Cinemachine camera if not set
         if (cinemachineCamera == null)
             cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
+
+        if (livesText == null)
+            livesText = GameObject.FindWithTag("LivesText")?.GetComponent<TextMeshProUGUI>();
+
+        if (gameOverPanel == null)
+            gameOverPanel = GameObject.FindWithTag("GameOverPanel");
+
+        if (spawnPoint == null)
+            spawnPoint = GameObject.FindWithTag("SpawnPoint")?.transform;
+    }
+    
+    private void CleanupProjectiles()
+    {
+        GameObject[] projectiles = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (GameObject projectile in projectiles)
+        {
+            Destroy(projectile);
+        }
     }
 
     private void Start()
     {
-        currentLives = maxLives;
-        UpdateLivesUI();
-        
-        // Hide game over panel initially
-        if (gameOverPanel != null)
+        if (isFirstLoad)
         {
-            gameOverPanel.SetActive(false);
+            isFirstLoad = false;
         }
-        
-        // Spawn initial ship
-        SpawnShip();
+
     }
 
     public void OnPlayerDeath()
     {
-        // Prevent multiple death calls for the same ship
         if (isProcessingDeath)
             return;
             
@@ -83,34 +152,33 @@ public class LivesManager : MonoBehaviour
 
         if (currentLives > 0)
         {
-            // Schedule ship respawn after delay
-            Invoke("SpawnShip", respawnDelay);
+            livesToRestoreAfterReload = currentLives;
+            
+            Invoke("ReloadCurrentScene", respawnDelay);
         }
         else
         {
-            // Game over
             GameOver();
         }
     }
 
+    private void ReloadCurrentScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
     private void SpawnShip()
     {
-        // Reset the death processing flag
         isProcessingDeath = false;
         
         if (shipPrefab != null && spawnPoint != null)
         {
-            // Spawn the ship
             currentShip = Instantiate(shipPrefab, spawnPoint.position, spawnPoint.rotation);
             
-            // Connect the ship to required components
             ShipController shipController = currentShip.GetComponent<ShipController>();
             if (shipController != null)
             {
-                // Connect to InputManager
                 shipController.SetInputManager(inputManager);
-                
-                // Connect to FuelManager
                 shipController.SetFuelManager(fuelManager);
             }
             else
@@ -118,25 +186,18 @@ public class LivesManager : MonoBehaviour
                 Debug.LogError("Ship prefab does not have ShipController component!");
             }
             
-            // Connect the ship's collision component to the lives manager
             ShipCollision shipCollision = currentShip.GetComponent<ShipCollision>();
             if (shipCollision != null)
             {
-                // Set up fuel manager reference
                 shipCollision.fuelManager = fuelManager;
-                
-                // Clear existing listeners to prevent duplicates
                 shipCollision.OnShipDestroyed.RemoveAllListeners();
-                
-                // Set up an event listener for when the ship is destroyed
                 shipCollision.OnShipDestroyed.AddListener(OnPlayerDeath);
             }
             else
             {
                 Debug.LogError("Ship prefab does not have ShipCollision component!");
             }
-            
-            // Update Cinemachine camera to follow the new ship
+
             if (cinemachineCamera != null)
             {
                 cinemachineCamera.Follow = currentShip.transform;
@@ -162,21 +223,37 @@ public class LivesManager : MonoBehaviour
 
     private void GameOver()
     {
+        isGameOver = true;
+        
+        Debug.Log("Game Over triggered!");
+        
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
+            Debug.Log("Game Over panel activated");
         }
-        
-        // Return to main menu after a delay
+        else
+        {
+            Debug.LogError("Game over panel not found!");
+            gameOverPanel = GameObject.FindWithTag("GameOverPanel");
+            if (gameOverPanel != null)
+            {
+                gameOverPanel.SetActive(true);
+                Debug.Log("Game Over panel found and activated");
+            }
+        }
+
         Invoke("ReturnToMainMenu", 3.0f);
     }
 
     private void ReturnToMainMenu()
     {
+        Debug.Log("Returning to main menu");
+        isGameOver = false;
+        currentLives = maxLives;
         SceneManager.LoadScene(mainMenuSceneName);
     }
 
-    // Public method to reset the level (can be called from a button or event)
     public void ResetLevel()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);

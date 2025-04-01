@@ -12,6 +12,9 @@ TagManager:
   - Planet
   - Wall
   - EnergyProjectile
+  - LivesText
+  - GameOverPanel
+  - SpawnPoint
   layers:
   - Default
   - TransparentFX

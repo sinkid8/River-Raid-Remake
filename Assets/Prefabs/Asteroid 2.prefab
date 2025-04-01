@@ -176,6 +176,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 5
+  showDebugMessages: 1
   OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDamaged:
     m_PersistentCalls:
       m_Calls: []

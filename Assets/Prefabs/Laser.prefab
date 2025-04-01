@@ -106,7 +106,8 @@ MonoBehaviour:
   damage: 10
   lifeTime: 1.5
   isLaser: 1
-  scoreValue: 10
+  scoreValue: 0
+  showDebugMessages: 1
 --- !u!50 &2473200811427708881
 Rigidbody2D:
   serializedVersion: 5

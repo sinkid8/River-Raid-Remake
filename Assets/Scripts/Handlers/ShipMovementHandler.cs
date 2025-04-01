@@ -15,9 +15,8 @@ public class ShipMovementHandler
         this.moveSpeed = moveSpeed;
         this.rotationSpeed = rotationSpeed;
         this.verticalDrift = verticalDrift;
-        this.gameStarted = false; // Initially the game hasn't started
-        
-        // Force the rigidbody to be stationary at creation
+        this.gameStarted = false;
+
         if (rb != null)
         {
             rb.linearVelocity = Vector2.zero;
@@ -31,12 +30,12 @@ public class ShipMovementHandler
 
     public void StartGame()
     {
-        gameStarted = true; // Start the game
+        gameStarted = true;
     }
 
     public void StopMovement()
     {
-        gameStarted = false; // Stop the game
+        gameStarted = false;
     }
 
     public void Move()
@@ -45,11 +44,10 @@ public class ShipMovementHandler
         {
             Vector2 movement = inputDirection * moveSpeed;
             movement.y += verticalDrift;
-            rb.linearVelocity = movement; // Set the velocity to move the ship
+            rb.linearVelocity = movement; 
         }
         else
         {
-            // When game is not started, ensure ship is completely stationary
             rb.linearVelocity = Vector2.zero;
         }
     }

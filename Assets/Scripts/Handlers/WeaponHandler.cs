@@ -3,10 +3,10 @@ using UnityEngine;
 public class WeaponHandler
 {
     private GameObject laserPrefab;
-    private GameObject energyWeaponPrefab; // New energy weapon prefab
+    private GameObject energyWeaponPrefab; 
     private Transform firePoint;
     private float laserFireRate;
-    private float energyWeaponFireRate; // Energy weapon fire rate
+    private float energyWeaponFireRate; 
 
     private float lastLaserFireTime = 0f;
     private float lastEnergyWeaponFireTime = 0f;
@@ -23,8 +23,7 @@ public class WeaponHandler
         this.energyWeaponFireRate = energyWeaponFireRate;
         this.fuelManager = fuelManager;
     }
-    
-    // Method to update the FuelManager reference
+
     public void UpdateFuelManager(FuelManager newFuelManager)
     {
         this.fuelManager = newFuelManager;
@@ -50,24 +49,16 @@ public class WeaponHandler
 
     public bool FireEnergyWeapon()
     {
-        // Ensure enough fuel for the energy weapon (at least 2 bars)
         if (Time.time > lastEnergyWeaponFireTime + energyWeaponFireRate)
         {
             if (energyWeaponPrefab != null && firePoint != null)
             {
-                // Check if fuel is sufficient (at least 2 bars)
-                if (fuelManager != null && fuelManager.GetCurrentFuelLevel() >= 2) // Only fire if fuel is at least 50%
+                if (fuelManager != null && fuelManager.GetCurrentFuelLevel() >= 2)
                 {
-                    // Fire the energy weapon
                     Object.Instantiate(energyWeaponPrefab, firePoint.position, firePoint.rotation);
 
-                    // Use half the fuel (2 bars)
-                    if (!fuelManager.UseHalfFuel())
-                    {
-                        Debug.Log("Not enough fuel to fire energy weapon.");
-                        return false; // Don't fire if fuel is insufficient
-                    }
-
+                    fuelManager.UseExactFuel(2);
+                    
                     lastEnergyWeaponFireTime = Time.time;
                     return true;
                 }
@@ -82,11 +73,5 @@ public class WeaponHandler
             }
         }
         return false;
-    }
-
-    public void UpdateCooldowns(float deltaTime)
-    {
-        // This method isn't strictly necessary for this implementation,
-        // but follows the pattern in your reference code
     }
 }

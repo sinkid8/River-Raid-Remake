@@ -1,27 +1,22 @@
 using UnityEngine;
 
-// Attach this to enemy objects
 public class EnemyScoreHandler : MonoBehaviour
 {
     [SerializeField] private int scoreValue = 10;
     private bool isDestroyed = false;
     
-    // Method to set the score value from another script
     public void SetScoreValue(int newValue)
     {
         scoreValue = newValue;
     }
-    
-    // This can be called when an enemy is destroyed
+
     public void AwardScore()
     {
-        // Prevent multiple score awards
         if (isDestroyed)
             return;
             
         isDestroyed = true;
         
-        // Award score points
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.AddScore(scoreValue);
@@ -33,7 +28,6 @@ public class EnemyScoreHandler : MonoBehaviour
         }
     }
     
-    // Getter for score value if needed
     public int GetScoreValue()
     {
         return scoreValue;

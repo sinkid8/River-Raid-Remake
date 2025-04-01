@@ -34,6 +34,11 @@ public class ShipMovementHandler
         gameStarted = true; // Start the game
     }
 
+    public void StopMovement()
+    {
+        gameStarted = false; // Stop the game
+    }
+
     public void Move()
     {
         if (gameStarted)

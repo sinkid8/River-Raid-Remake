@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class ShipController : MonoBehaviour
 {
@@ -12,6 +14,8 @@ public class ShipController : MonoBehaviour
     private TextMeshProUGUI level1Text;
     private TextMeshProUGUI level2Text;
     private TextMeshProUGUI level3Text;
+    private TextMeshProUGUI gameOverText;
+    private TextMeshProUGUI gameEndText;
 
     // Movement parameters
     [SerializeField] private float moveSpeed = 5f;
@@ -38,6 +42,7 @@ public class ShipController : MonoBehaviour
     private bool level3SoundPlayed = false; // Flag to track if the level 3 sound has been played
     private bool driftIncreasedAtLevel2 = false;
     private bool driftIncreasedAtLevel3 = false;
+    private bool shipStopped = false; // Flag to track if the ship has stopped
 
     // Method to set InputManager reference at runtime
     public void SetInputManager(InputManager newInputManager)
@@ -87,6 +92,8 @@ public class ShipController : MonoBehaviour
         Debug.Log($"Level1 found: {level1Text != null}");
         Debug.Log($"Level2 found: {level2Text != null}");
         Debug.Log($"Level3 found: {level3Text != null}");
+        Debug.Log($"GameOverText found: {gameOverText != null}");
+        Debug.Log($"GameEndText found: {gameEndText != null}");
         
         rb = GetComponent<Rigidbody2D>();
 
@@ -169,6 +176,8 @@ public class ShipController : MonoBehaviour
             level1Text = FindTextInTransform(canvas.transform, "Level 1");
             level2Text = FindTextInTransform(canvas.transform, "Level 2");
             level3Text = FindTextInTransform(canvas.transform, "Level 3");
+            gameOverText = FindTextInTransform(canvas.transform, "GameOverText");
+            gameEndText = FindTextInTransform(canvas.transform, "GameEndText");
             
             // If we found all elements, we can stop searching
             if (beginningText != null && level1Text != null && 
@@ -179,7 +188,8 @@ public class ShipController : MonoBehaviour
         }
         
         // If we didn't find the elements by name, look for all TextMeshProUGUI components
-        if (beginningText == null || level1Text == null || level2Text == null || level3Text == null)
+        if (beginningText == null || level1Text == null || level2Text == null || level3Text == null ||
+            gameOverText == null || gameEndText == null)
         {
             TextMeshProUGUI[] allTexts = FindObjectsOfType<TextMeshProUGUI>();
             
@@ -209,6 +219,18 @@ public class ShipController : MonoBehaviour
                 {
                     level3Text = text;
                     Debug.Log($"Found Level 3 by content: {text.name}");
+                }
+                else if (gameOverText == null && 
+                         (text.name.Contains("Game Over") || text.text.Contains("Game Over")))
+                {
+                    gameOverText = text;
+                    Debug.Log($"Found GameOverText by content: {text.name}");
+                }
+                else if (gameEndText == null && 
+                         (text.name.Contains("Game End") || text.text.Contains("Game End")))
+                {
+                    gameEndText = text;
+                    Debug.Log($"Found GameEndText by content: {text.name}");
                 }
             }
         }
@@ -276,6 +298,14 @@ public class ShipController : MonoBehaviour
         if (level3Text != null)
         {
             level3Text.gameObject.SetActive(false);
+        }
+        if (gameOverText != null)
+        {
+            gameOverText.gameObject.SetActive(false);
+        }
+        if (gameEndText != null)
+        {
+            gameEndText.gameObject.SetActive(false);
         }
     }
 
@@ -351,7 +381,7 @@ public class ShipController : MonoBehaviour
     // Called when any key is pressed to start the game
     private void Update()
     {
-        if (!gameStarted && Input.anyKeyDown)
+        if (!gameStarted && Input.anyKeyDown && shipStopped == false)
         {
             gameStarted = true;
             
@@ -367,7 +397,7 @@ public class ShipController : MonoBehaviour
             {
                 level1Text.gameObject.SetActive(true);
                 Debug.Log("Showing Level 1 text");
-                Destroy(level1Text.gameObject, 2f);
+                StartCoroutine(DeactivateTextAfterDelay(level1Text.gameObject, 2f));
             }
             else
             {
@@ -389,7 +419,7 @@ public class ShipController : MonoBehaviour
             if (level2Text != null)
             {
                 level2Text.gameObject.SetActive(true);
-                Destroy(level2Text.gameObject, 2f);
+                StartCoroutine(DeactivateTextAfterDelay(level2Text.gameObject, 2f));
             }
 
             if (AudioManager.instance != null)
@@ -413,7 +443,7 @@ public class ShipController : MonoBehaviour
             if (level3Text != null)
             {
                 level3Text.gameObject.SetActive(true);
-                Destroy(level3Text.gameObject, 2f);
+                StartCoroutine(DeactivateTextAfterDelay(level3Text.gameObject, 2f));
             }
 
             if (AudioManager.instance != null)
@@ -428,5 +458,27 @@ public class ShipController : MonoBehaviour
             movementHandler.IncreaseVerticalDrift(1f);
             driftIncreasedAtLevel3 = true;
         }
+        if (currentPosition.y > 145 && !shipStopped)
+        {
+            // Reset the game or perform any other action when the ship goes off-screen
+            Debug.Log("Ship went off-screen. Resetting the game.");
+            movementHandler.StopMovement(); // Stop the ship's movement
+            shipStopped = true;
+            gameOverText.gameObject.SetActive(true);
+            gameEndText.gameObject.SetActive(true);
+        }
+
+        if (Input.anyKeyDown && shipStopped)
+        {
+            gameOverText.gameObject.SetActive(false);
+            gameEndText.gameObject.SetActive(false);
+            SceneManager.LoadScene("Main Menu"); // Reload the current scene
+        }
+    }
+
+    private IEnumerator DeactivateTextAfterDelay(GameObject textObject, float delay)
+    {
+        yield return new WaitForSeconds(delay);  // Wait for the specified delay
+        textObject.SetActive(false); // Deactivate the text object after the delay
     }
 }

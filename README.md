@@ -8,3 +8,7 @@ Also changed the theme from river raiding to space raiding!
 https://youtu.be/ov4faLLuzns
 
 # Individual Features
+- Jaidyn Gordon-Mason
+     - Player handling and shooting mechanics
+     - Lives/scoring system
+     - Enemy damage system and death mechanics

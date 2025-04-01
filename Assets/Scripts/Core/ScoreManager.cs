@@ -106,7 +106,7 @@ public class ScoreManager : MonoBehaviour
             rectTransform.anchorMin = new Vector2(1, 1);
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.pivot = new Vector2(1, 1);
-            rectTransform.anchoredPosition = new Vector2(-10, -10);
+            rectTransform.anchoredPosition = new Vector2(-95, -80);
             rectTransform.sizeDelta = new Vector2(200, 50);
 
             scoreText.alignment = TextAlignmentOptions.Right;

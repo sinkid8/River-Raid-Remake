@@ -3,93 +3,121 @@ using System.Collections;
 
 public class PlanetController : MonoBehaviour
 {
+    [SerializeField] private int requiredShotCount = 2;
     private int shotCount = 0;
 
+    // Debug flag for troubleshooting
+    [SerializeField] private bool showDebugMessages = true;
+
     // Shake parameters
-    [SerializeField] private float shakeIntensity = 0.1f; // How much the planet shakes
-    [SerializeField] private float shakeDuration = 0.5f;  // How long the shake lasts
+    [SerializeField] private float shakeIntensity = 0.1f;
+    [SerializeField] private float shakeDuration = 0.5f; 
 
     private Vector3 originalPosition;
+    private bool isShaking = false;
+    
+    private System.Collections.Generic.HashSet<int> hitProjectiles = new System.Collections.Generic.HashSet<int>();
+
     private void Start()
     {
-        // Save the planet's original position
         originalPosition = transform.position;
+        
+        shotCount = 0;
+        
+        if (showDebugMessages)
+        {
+            Debug.Log("Planet initialized. Required shots to destroy: " + requiredShotCount);
+        }
     }
 
-    // Changed from private to public so it can be called from EnergyProjectileController
     public void OnTriggerEnter2D(Collider2D other)
     {
-        // First, check if this is a normal projectile - if so, do nothing to the planet
-        ProjectileController normalProjectile = other.GetComponent<ProjectileController>();
-        if (normalProjectile != null)
+        int projectileID = other.gameObject.GetInstanceID();
+        
+        if (hitProjectiles.Contains(projectileID))
         {
-            // Just destroy the normal projectile with no effect on the planet
-            Destroy(other.gameObject);
-            Debug.Log("Regular projectile hit planet - DESTROYED WITH NO EFFECT");
+            if (showDebugMessages)
+            {
+                Debug.Log("Duplicate hit detected from projectile ID: " + projectileID);
+            }
             return;
         }
         
-        // Only energy projectiles can damage planets - explicit check for energy projectile component
+        // Add to hit list
+        hitProjectiles.Add(projectileID);
+
+        ProjectileController normalProjectile = other.GetComponent<ProjectileController>();
+        if (normalProjectile != null)
+        {
+            Destroy(other.gameObject);
+            return;
+        }
+        
         EnergyProjectileController energyProjectile = other.GetComponent<EnergyProjectileController>();
         if (energyProjectile != null)
         {
             shotCount++;
-            Debug.Log("Planet hit by energy projectile! Shot count: " + shotCount);
+            
+            if (showDebugMessages)
+            {
+                Debug.Log("Planet hit by energy projectile! Shot count: " + shotCount + " / " + requiredShotCount);
+            }
 
             if (shotCount == 1)
             {
-                // Apply shaking effect when first shot is fired
                 ShakePlanet();
             }
-            else if (shotCount >= 2)
+            else if (shotCount >= requiredShotCount)
             {
-                // Explode the planet on the second shot
                 ExplodePlanet();
             }
+            else
+            {
+                ShakePlanet();
+            }
 
-            // Destroy the energy projectile after it hits
-            Destroy(other.gameObject);
         }
     }
 
     private void ShakePlanet()
     {
-        // Start the shaking effect with a Coroutine
+        if (isShaking)
+            return;
+
         StartCoroutine(ShakeCoroutine());
     }
 
     private IEnumerator ShakeCoroutine()
     {
+        isShaking = true;
         float elapsedTime = 0f;
 
         while (elapsedTime < shakeDuration)
         {
-            // Apply random shake offset
             Vector3 randomOffset = Random.insideUnitSphere * shakeIntensity;
             transform.position = originalPosition + randomOffset;
 
-            // Increment elapsed time
             elapsedTime += Time.deltaTime;
 
-            // Wait for the next frame
             yield return null;
         }
 
-        // Reset the position after shaking
         transform.position = originalPosition;
+        isShaking = false;
     }
 
     private void ExplodePlanet()
     {
-        // Add explosion effect or destroy the planet
-        Debug.Log("Planet exploded by energy weapon!");
+        if (showDebugMessages)
+        {
+            Debug.Log("Planet exploded by energy weapon after " + shotCount + " shots!");
+        }
         
-        // Optional: Add a visual explosion effect here
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PlaySound(AudioManager.instance.bigExplosionClip);
         }
         
-        Destroy(gameObject); // Destroy the planet
+        Destroy(gameObject);
     }
 }

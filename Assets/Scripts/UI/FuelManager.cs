@@ -7,9 +7,7 @@ public class FuelManager : MonoBehaviour
     public Image batteryImage;
     public Sprite[] batterySprites;
 
-    // Event for when fuel level changes
     public UnityEvent<int> OnFuelLevelChanged = new UnityEvent<int>();
-    // Event specifically for when fuel is full
     public UnityEvent OnFuelFull = new UnityEvent();
 
     private int currentFuelLevel = 0;
@@ -17,7 +15,6 @@ public class FuelManager : MonoBehaviour
 
     private void Start()
     {
-        // Initialize battery UI
         UpdateBatteryUI();
     }
 
@@ -28,29 +25,24 @@ public class FuelManager : MonoBehaviour
             currentFuelLevel++;
             UpdateBatteryUI();
 
-            // Check if fuel is now full
             if (currentFuelLevel >= maxFuelLevel)
             {
                 OnFuelFull.Invoke();
             }
-
-            // Notify listeners about fuel level change
             OnFuelLevelChanged.Invoke(currentFuelLevel);
         }
     }
 
-    // Method to check if fuel is full
     public bool IsFuelFull()
     {
         return currentFuelLevel >= maxFuelLevel;
     }
 
-    // Method to use half of the fuel (for energy weapon) - DEPRECATED
     public bool UseHalfFuel()
     {
-        if (currentFuelLevel >= 2) // Ensure there are at least 2 fuel bars (50%)
+        if (currentFuelLevel >= 2)
         {
-            currentFuelLevel -= 2; // Use 2 units of fuel (50%)
+            currentFuelLevel -= 2;
             UpdateBatteryUI();
             OnFuelLevelChanged.Invoke(currentFuelLevel);
             return true;
@@ -58,7 +50,6 @@ public class FuelManager : MonoBehaviour
         return false;
     }
 
-    // New method to use exactly the specified amount of fuel
     public bool UseExactFuel(int amount)
     {
         if (currentFuelLevel >= amount)
@@ -73,11 +64,9 @@ public class FuelManager : MonoBehaviour
 
     private void UpdateBatteryUI()
     {
-        // Update the battery image based on fuel level
         batteryImage.sprite = batterySprites[currentFuelLevel];
     }
 
-    // Added getter for current fuel level
     public int GetCurrentFuelLevel()
     {
         return currentFuelLevel;

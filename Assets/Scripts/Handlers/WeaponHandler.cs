@@ -3,10 +3,10 @@ using UnityEngine;
 public class WeaponHandler
 {
     private GameObject laserPrefab;
-    private GameObject energyWeaponPrefab; // New energy weapon prefab
+    private GameObject energyWeaponPrefab; 
     private Transform firePoint;
     private float laserFireRate;
-    private float energyWeaponFireRate; // Energy weapon fire rate
+    private float energyWeaponFireRate; 
 
     private float lastLaserFireTime = 0f;
     private float lastEnergyWeaponFireTime = 0f;
@@ -23,8 +23,7 @@ public class WeaponHandler
         this.energyWeaponFireRate = energyWeaponFireRate;
         this.fuelManager = fuelManager;
     }
-    
-    // Method to update the FuelManager reference
+
     public void UpdateFuelManager(FuelManager newFuelManager)
     {
         this.fuelManager = newFuelManager;

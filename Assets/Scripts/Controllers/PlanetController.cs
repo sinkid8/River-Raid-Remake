@@ -10,25 +10,38 @@ public class PlanetController : MonoBehaviour
     [SerializeField] private float shakeDuration = 0.5f;  // How long the shake lasts
 
     private Vector3 originalPosition;
-
     private void Start()
     {
         // Save the planet's original position
         originalPosition = transform.position;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    // Changed from private to public so it can be called from EnergyProjectileController
+    public void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("EnergyProjectile"))
+        // First, check if this is a normal projectile - if so, do nothing to the planet
+        ProjectileController normalProjectile = other.GetComponent<ProjectileController>();
+        if (normalProjectile != null)
+        {
+            // Just destroy the normal projectile with no effect on the planet
+            Destroy(other.gameObject);
+            Debug.Log("Regular projectile hit planet - DESTROYED WITH NO EFFECT");
+            return;
+        }
+        
+        // Only energy projectiles can damage planets - explicit check for energy projectile component
+        EnergyProjectileController energyProjectile = other.GetComponent<EnergyProjectileController>();
+        if (energyProjectile != null)
         {
             shotCount++;
+            Debug.Log("Planet hit by energy projectile! Shot count: " + shotCount);
 
             if (shotCount == 1)
             {
                 // Apply shaking effect when first shot is fired
                 ShakePlanet();
             }
-            else if (shotCount == 2)
+            else if (shotCount >= 2)
             {
                 // Explode the planet on the second shot
                 ExplodePlanet();
@@ -69,7 +82,14 @@ public class PlanetController : MonoBehaviour
     private void ExplodePlanet()
     {
         // Add explosion effect or destroy the planet
-        Debug.Log("Planet exploded!");
+        Debug.Log("Planet exploded by energy weapon!");
+        
+        // Optional: Add a visual explosion effect here
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.PlaySound(AudioManager.instance.bigExplosionClip);
+        }
+        
         Destroy(gameObject); // Destroy the planet
     }
 }

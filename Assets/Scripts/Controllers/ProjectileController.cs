@@ -7,8 +7,9 @@ public class ProjectileController : MonoBehaviour
     [SerializeField] private float lifeTime = 3f;
     [SerializeField] private bool isLaser = true; // True for laser, false for missile
     [SerializeField] private int scoreValue = 10; // Default score value for destroyed enemies
+    [SerializeField] private bool showDebugMessages = true;
 
-    // Removed explosion prefab from here to prevent double explosions
+    private bool hasCollided = false;
 
     private void Start()
     {
@@ -26,38 +27,56 @@ public class ProjectileController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        // Prevent multiple collision processing
+        if (hasCollided)
+            return;
+            
+        if (showDebugMessages)
+        {
+            Debug.Log($"Projectile hit: {collision.gameObject.name}, tag: {collision.tag}");
+        }
+        
+        // Mark as collided
+        hasCollided = true;
+        
+        // Handle planet hits differently
+        if (collision.CompareTag("Planet"))
+        {
+            // Regular projectiles do nothing to planets
+            if (isLaser)
+            {
+                // Just destroy the projectile
+                Destroy(gameObject);
+                return;
+            }
+        }
+
         if (collision.CompareTag("Enemy") || collision.CompareTag("Debris"))
         {
-            // Apply damage to health component
-            HealthComponent health = collision.GetComponent<HealthComponent>();
-            if (health != null)
-            {
-                health.TakeDamage(damage);
-            }
-            
-            // Try to trigger score directly on the enemy
+            // Try the new ImprovedEnemyController first
             EnemyController enemy = collision.GetComponent<EnemyController>();
             if (enemy != null)
             {
-                // Let the enemy handle destruction, scoring and explosion
-                enemy.DestroyEnemy();
-            }
-            else if (collision.CompareTag("Enemy") && ScoreManager.Instance != null)
-            {
-                // Direct score addition if no EnemyController exists
-                ScoreManager.Instance.AddScore(scoreValue);
+                // Apply damage through the improved controller
+                enemy.TakeDamage(damage);
             }
 
-            // Destroy the projectile without creating an explosion
-            // The explosion will be created by the EnemyController instead
+            // Destroy the projectile
             Destroy(gameObject);
         }
 
-        // Check if the projectile hits a battery (no collision)
+        // Special handling for batteries
         if (collision.CompareTag("Battery"))
         {
             // Ignore collision with battery
             Physics2D.IgnoreCollision(collision, GetComponent<Collider2D>());
+            hasCollided = false; // Reset to allow further collisions
         }
+    }
+    
+    // Getter for damage value
+    public int GetDamage()
+    {
+        return damage;
     }
 }

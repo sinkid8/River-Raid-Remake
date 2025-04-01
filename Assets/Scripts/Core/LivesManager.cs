@@ -14,11 +14,9 @@ public class LivesManager : MonoBehaviour
     [SerializeField] private float respawnDelay = 1.0f;
     [SerializeField] private string mainMenuSceneName = "MainMenu";
     
-    // References to necessary components
     [SerializeField] private InputManager inputManager;
     [SerializeField] private FuelManager fuelManager;
     
-    // Reference to the modern Cinemachine camera
     [SerializeField] private CinemachineCamera cinemachineCamera;
 
     public int currentLives; 
@@ -26,7 +24,7 @@ public class LivesManager : MonoBehaviour
     private bool isProcessingDeath = false;
     private bool isFirstLoad = true;
     private int livesToRestoreAfterReload = 0;
-    private bool isGameOver = false; // Track game over state
+    private bool isGameOver = false; 
 
     public static LivesManager Instance;
 
@@ -41,14 +39,11 @@ public class LivesManager : MonoBehaviour
         }
         else
         {
-            // Transfer the correct lives count and game over state to the existing instance
             if (Instance.livesToRestoreAfterReload > 0)
             {
                 Instance.currentLives = Instance.livesToRestoreAfterReload;
                 Instance.livesToRestoreAfterReload = 0;
             }
-            
-            // Transfer game over state
             isGameOver = Instance.isGameOver;
             
             Destroy(gameObject);
@@ -68,21 +63,17 @@ public class LivesManager : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Only handle level scenes, not the main menu
         if (scene.name == mainMenuSceneName)
         {
-            isGameOver = false; // Reset game over state when returning to main menu
-            currentLives = maxLives; // Reset lives
+            isGameOver = false;
+            currentLives = maxLives;
             return;
         }
 
-        // Find necessary references after a scene reload
         FindReferences();
         
-        // Update UI
         UpdateLivesUI();
         
-        // Handle game over state if needed
         if (isGameOver)
         {
             if (gameOverPanel != null)
@@ -101,13 +92,10 @@ public class LivesManager : MonoBehaviour
             gameOverPanel.SetActive(false);
         }
         
-        // Only spawn ship if not game over
         if (!isGameOver)
         {
             SpawnShip();
         }
-        
-        // Clean up any leftover projectiles from previous scene
         CleanupProjectiles();
     }
     
@@ -122,7 +110,6 @@ public class LivesManager : MonoBehaviour
         if (cinemachineCamera == null)
             cinemachineCamera = FindFirstObjectByType<CinemachineCamera>();
 
-        // Find UI references
         if (livesText == null)
             livesText = GameObject.FindWithTag("LivesText")?.GetComponent<TextMeshProUGUI>();
 
@@ -148,8 +135,7 @@ public class LivesManager : MonoBehaviour
         {
             isFirstLoad = false;
         }
-        
-        // Don't do anything else in Start - it's all handled in OnSceneLoaded
+
     }
 
     public void OnPlayerDeath()
@@ -166,10 +152,8 @@ public class LivesManager : MonoBehaviour
 
         if (currentLives > 0)
         {
-            // Store the current lives count before reload
             livesToRestoreAfterReload = currentLives;
             
-            // Reload the current scene to reset all enemies and debris
             Invoke("ReloadCurrentScene", respawnDelay);
         }
         else
@@ -251,7 +235,6 @@ public class LivesManager : MonoBehaviour
         else
         {
             Debug.LogError("Game over panel not found!");
-            // Try to find it again
             gameOverPanel = GameObject.FindWithTag("GameOverPanel");
             if (gameOverPanel != null)
             {

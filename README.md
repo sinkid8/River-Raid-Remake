@@ -27,15 +27,15 @@ https://youtu.be/ov4faLLuzns
 
 This project makes use of the following Unity assets:
 
-- **2D Space Kit:** 
-  [Unity Asset Store][https://assetstore.unity.com/packages/2d/environments/2d-space-kit-27662]
+- **2D Space Kit:**  
+  [Unity Asset Store](https://assetstore.unity.com/packages/2d/environments/2d-space-kit-27662)  
   Attribution: "Created by Brett Gregory"
 
-- **Keyboard Keys & Mouse Sprites**
-  [Unity Asset Store][https://assetstore.unity.com/packages/2d/gui/keyboard-keys-mouse-sprites-225232].
+- **Keyboard Keys & Mouse Sprites:**  
+  [Unity Asset Store](https://assetstore.unity.com/packages/2d/gui/keyboard-keys-mouse-sprites-225232)  
   Attribution: "Created by JohnFarmer"
 
-- **UX Flat Icons** 
-  [Unity Asset Store][https://assetstore.unity.com/packages/2d/gui/icons/ux-flat-icons-free-202525]
+- **UX Flat Icons:**  
+  [Unity Asset Store](https://assetstore.unity.com/packages/2d/gui/icons/ux-flat-icons-free-202525)  
   Attribution: "Created by Heathen Engineering"
 
